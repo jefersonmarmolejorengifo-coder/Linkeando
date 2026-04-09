@@ -29,7 +29,7 @@ export async function registro(formData: FormData) {
 
   const email    = formData.get('email') as string
   const password = formData.get('password') as string
-  const nombre   = formData.get('nombre') as string
+  const nombre   = `${formData.get('nombre') ?? ''} ${formData.get('apellido') ?? ''}`.trim()
   const telefono = formData.get('telefono') as string
   const tipo     = formData.get('tipo') as 'cliente' | 'profesional'
   const categoria  = formData.get('categoria') as Categoria | null
@@ -60,6 +60,17 @@ export async function registro(formData: FormData) {
 
   revalidatePath('/', 'layout')
   redirect('/?bienvenida=1')
+}
+
+export async function recuperarPassword(_: unknown, formData: FormData): Promise<{ error?: string; success?: boolean }> {
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+  const email = formData.get('email') as string
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/auth/nueva-password`,
+  })
+  if (error) return { error: error.message }
+  return { success: true }
 }
 
 export async function logout() {
