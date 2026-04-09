@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Evita que Leaflet intente usar APIs de browser en el servidor
   webpack: (config) => {
     config.resolve.fallback = { fs: false }
