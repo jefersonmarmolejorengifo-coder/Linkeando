@@ -20,7 +20,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/inicio')
 }
 
 export async function registro(formData: FormData) {
@@ -65,7 +65,7 @@ export async function registro(formData: FormData) {
   }, { onConflict: 'id', ignoreDuplicates: true })
 
   revalidatePath('/', 'layout')
-  redirect('/?bienvenida=1')
+  redirect('/inicio')
 }
 
 export async function recuperarPassword(_: unknown, formData: FormData): Promise<{ error?: string; success?: boolean }> {
