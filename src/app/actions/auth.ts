@@ -33,30 +33,36 @@ export async function registro(formData: FormData) {
   const telefono = formData.get('telefono') as string
   const tipo     = formData.get('tipo') as 'cliente' | 'profesional'
   const categoria  = formData.get('categoria') as Categoria | null
-  const descripcion = formData.get('descripcion') as string | null
   const barrio   = formData.get('barrio') as string | null
 
-  // 1. Crear usuario en Supabase Auth
-  const { data, error: authError } = await supabase.auth.signUp({ email, password })
+  // 1. Crear usuario en Supabase Auth con metadatos — el trigger los usa para crear el perfil
+  const { data, error: authError } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        tipo,
+        nombre,
+        telefono: telefono || '',
+        categoria: tipo === 'profesional' ? (categoria ?? '') : '',
+        barrio: barrio || '',
+      },
+    },
+  })
 
   if (authError || !data.user) {
     redirect(`/auth/registro?error=${encodeURIComponent(authError?.message ?? 'Error al registrar')}`)
   }
 
-  // 2. Insertar perfil en la tabla usuarios
-  const { error: dbError } = await supabase.from('usuarios').insert({
+  // 2. Intentar insertar perfil directamente como respaldo (por si el trigger aún no corrió)
+  await supabase.from('usuarios').upsert({
     id: data.user.id,
     tipo,
     nombre,
     telefono: telefono || null,
     categoria: tipo === 'profesional' ? categoria : null,
-    descripcion: tipo === 'profesional' ? descripcion : null,
     barrio: barrio || null,
-  })
-
-  if (dbError) {
-    redirect(`/auth/registro?error=${encodeURIComponent(dbError.message)}`)
-  }
+  }, { onConflict: 'id', ignoreDuplicates: true })
 
   revalidatePath('/', 'layout')
   redirect('/?bienvenida=1')
