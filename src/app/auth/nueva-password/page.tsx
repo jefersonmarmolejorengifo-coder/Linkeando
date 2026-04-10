@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
 
 const EyeIcon = () => (
@@ -30,15 +31,69 @@ function calcStrength(v: string): number {
   return s
 }
 
+type PageState = 'loading' | 'ready' | 'error' | 'success'
+
 export default function NuevaPasswordPage() {
   const router = useRouter()
+  const [pageState, setPageState] = useState<PageState>('loading')
+  const [hashError, setHashError] = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [listo, setListo] = useState(false)
 
   const strength = calcStrength(password)
+
+  useEffect(() => {
+    // Leer el hash del URL
+    const hash = window.location.hash.substring(1)
+    const params = new URLSearchParams(hash)
+
+    const errorParam = params.get('error')
+    const errorDesc = params.get('error_description')
+    const errorCode = params.get('error_code')
+    const accessToken = params.get('access_token')
+    const type = params.get('type')
+
+    if (errorParam) {
+      // Link con error en el hash
+      const msg = errorCode === 'otp_expired'
+        ? 'El enlace de recuperación expiró. Debes solicitar uno nuevo.'
+        : errorDesc?.replace(/\+/g, ' ') ?? 'El enlace no es válido.'
+      setHashError(msg)
+      setPageState('error')
+      return
+    }
+
+    if (accessToken && type === 'recovery') {
+      // Flujo implícito: establecer sesión desde el hash
+      const supabase = createClient()
+      const refreshToken = params.get('refresh_token') ?? ''
+      supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+        .then(({ error: sessionError }) => {
+          if (sessionError) {
+            setHashError('No se pudo establecer la sesión. Solicita un nuevo enlace.')
+            setPageState('error')
+          } else {
+            setPageState('ready')
+            // Limpiar el hash de la URL sin recargar
+            history.replaceState(null, '', window.location.pathname)
+          }
+        })
+      return
+    }
+
+    // Sin hash — puede venir del callback PKCE que ya estableció la sesión
+    const supabase = createClient()
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        setPageState('ready')
+      } else {
+        setHashError('Enlace inválido o sesión expirada. Solicita un nuevo enlace.')
+        setPageState('error')
+      }
+    })
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -49,7 +104,7 @@ export default function NuevaPasswordPage() {
     const { error: err } = await supabase.auth.updateUser({ password })
     setLoading(false)
     if (err) { setError(err.message); return }
-    setListo(true)
+    setPageState('success')
     setTimeout(() => router.push('/inicio'), 2500)
   }
 
@@ -59,13 +114,50 @@ export default function NuevaPasswordPage() {
 
         {/* Hero */}
         <div className="bg-[#1D9E75] px-6 pt-8 pb-5 text-center">
-          <div className="text-4xl mb-2">🔐</div>
-          <p className="text-xl font-medium text-white">Nueva contraseña</p>
-          <p className="text-xs text-[#9FE1CB] mt-1">Elige una contraseña segura</p>
+          <div className="text-4xl mb-2">
+            {pageState === 'error' ? '⚠️' : pageState === 'success' ? '✅' : '🔐'}
+          </div>
+          <p className="text-xl font-medium text-white">
+            {pageState === 'error' ? 'Enlace no válido' : pageState === 'success' ? '¡Listo!' : 'Nueva contraseña'}
+          </p>
+          <p className="text-xs text-[#9FE1CB] mt-1">
+            {pageState === 'error' ? 'Solicita un nuevo enlace' : pageState === 'success' ? 'Contraseña actualizada' : 'Elige una contraseña segura'}
+          </p>
         </div>
 
         <div className="bg-white px-6 py-6">
-          {listo ? (
+
+          {/* Estado: cargando */}
+          {pageState === 'loading' && (
+            <div className="text-center py-6">
+              <div className="w-8 h-8 border-2 border-[#1D9E75] border-t-transparent rounded-full animate-spin mx-auto mb-3"/>
+              <p className="text-sm text-gray-400">Verificando enlace…</p>
+            </div>
+          )}
+
+          {/* Estado: error */}
+          {pageState === 'error' && (
+            <div className="text-center py-2">
+              <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg mb-5 leading-relaxed">
+                {hashError}
+              </div>
+              <Link
+                href="/auth/recuperar"
+                className="block w-full bg-[#1D9E75] hover:bg-[#178a65] text-white py-3 rounded-xl text-sm font-medium text-center transition-colors mb-3"
+              >
+                Solicitar nuevo enlace
+              </Link>
+              <Link
+                href="/auth/login"
+                className="block text-xs text-gray-400 hover:text-gray-600 text-center"
+              >
+                Volver al inicio de sesión
+              </Link>
+            </div>
+          )}
+
+          {/* Estado: éxito */}
+          {pageState === 'success' && (
             <div className="text-center py-4">
               <div className="w-16 h-16 bg-[#E1F5EE] rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#9FE1CB]">
                 <svg className="w-8 h-8 text-[#1D9E75]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -75,7 +167,10 @@ export default function NuevaPasswordPage() {
               <h2 className="text-lg font-semibold text-[#1D9E75] mb-2">¡Contraseña actualizada!</h2>
               <p className="text-sm text-gray-500">Redirigiendo al inicio…</p>
             </div>
-          ) : (
+          )}
+
+          {/* Estado: formulario */}
+          {pageState === 'ready' && (
             <>
               <h1 className="text-base font-medium text-gray-900 mb-1">Crea tu nueva contraseña</h1>
               <p className="text-sm text-gray-400 mb-5 leading-relaxed">
@@ -141,6 +236,7 @@ export default function NuevaPasswordPage() {
               </form>
             </>
           )}
+
         </div>
       </div>
     </div>
