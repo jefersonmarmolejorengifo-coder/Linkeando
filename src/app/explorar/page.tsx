@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { CATEGORIAS, BARRIOS_CALI, CATEGORIA_COLORS } from '@/lib/constants'
 import type { Usuario } from '@/types'
@@ -24,11 +24,12 @@ function Stars({ rating }: { rating: number }) {
 
 export default function ExplorarPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [pros, setPros] = useState<Usuario[]>([])
   const [loading, setLoading] = useState(true)
-  const [catFiltro, setCatFiltro] = useState<string | null>(null)
+  const [catFiltro, setCatFiltro] = useState<string | null>(searchParams.get('cat'))
   const [barrioFiltro, setBarrioFiltro] = useState('')
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(searchParams.get('q') ?? '')
 
   useEffect(() => {
     const supabase = createClient()

@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 
-export const createClient = (request: NextRequest) => {
+export const createClient = async (request: NextRequest) => {
   let supabaseResponse = NextResponse.next({
     request: {
       headers: request.headers,
@@ -31,6 +31,10 @@ export const createClient = (request: NextRequest) => {
       },
     },
   );
+
+  // Refrescar la sesión del usuario en cada request
+  // Esto es necesario para que las cookies de sesión se mantengan actualizadas
+  await supabase.auth.getUser()
 
   return supabaseResponse
 };

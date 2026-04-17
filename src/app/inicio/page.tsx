@@ -45,7 +45,7 @@ const LogoSVG = () => (
 )
 
 /* ── Barra de navegación inferior ────────────────────────────── */
-function BottomNavCliente({ router, msgDot }: { router: ReturnType<typeof useRouter>; msgDot: boolean }) {
+function BottomNavCliente({ router, msgDot, alertDot }: { router: ReturnType<typeof useRouter>; msgDot: boolean; alertDot: boolean }) {
   return (
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-borde flex justify-around py-2 z-40">
       {[
@@ -57,6 +57,8 @@ function BottomNavCliente({ router, msgDot }: { router: ReturnType<typeof useRou
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
         { label: 'Mensajes', href: '/solicitudes', active: false, dot: msgDot,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+        { label: 'Alertas',  href: '/notificaciones', active: false, dot: alertDot,
+          icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg> },
         { label: 'Servicios',href: '/mis-solicitudes', active: false,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> },
       ].map((item) => (
@@ -269,7 +271,7 @@ function ViewCliente({
         <div className="h-1"/>
       </div>
 
-      <BottomNavCliente router={router} msgDot={msgDot} />
+      <BottomNavCliente router={router} msgDot={msgDot} alertDot={false} />
     </>
   )
 }

@@ -118,6 +118,36 @@ export default function PanelDashboard() {
 
       {/* Contenido */}
       <div className="px-4 pt-4 flex flex-col gap-3">
+
+        {/* Onboarding checklist */}
+        {usuario && (usuario.total_servicios === 0 || !perfil?.bio) && (
+          <div className="bg-verde-50 rounded-xl border border-verde-200 p-4">
+            <h3 className="text-sm font-semibold text-pro-500 mb-2">Completa tu perfil para recibir mas solicitudes</h3>
+            <div className="space-y-2">
+              {[
+                { done: !!usuario.nombre, label: 'Nombre completo', href: '/panel/perfil' },
+                { done: !!perfil?.bio, label: 'Descripcion y experiencia', href: '/panel/perfil' },
+                { done: !!usuario.lat, label: 'Ubicacion en el mapa', href: '/panel/perfil' },
+                { done: especialidades.length > 0, label: 'Al menos una especialidad', href: '/panel/especialidades' },
+                { done: perfil?.disponible ?? false, label: 'Disponibilidad activa', href: undefined },
+              ].map((step) => (
+                <div key={step.label} className="flex items-center gap-2">
+                  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${step.done ? 'bg-verde-500 text-white' : 'border-2 border-gray-300'}`}>
+                    {step.done ? '✓' : ''}
+                  </span>
+                  {step.href && !step.done ? (
+                    <button onClick={() => router.push(step.href!)} className="text-[12px] text-pro-500 hover:underline">
+                      {step.label}
+                    </button>
+                  ) : (
+                    <span className={`text-[12px] ${step.done ? 'text-gray-400 line-through' : 'text-gray-600'}`}>{step.label}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Métricas */}
         <div className="grid grid-cols-2 gap-2">
           {[

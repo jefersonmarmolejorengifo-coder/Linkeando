@@ -253,8 +253,8 @@ export default function RegistroPage() {
               />
               <label htmlFor="terms" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
                 Acepto los{' '}
-                <span className="text-verde-500">Términos de uso</span> y la{' '}
-                <span className="text-verde-500">Política de privacidad</span> de Linkeando,
+                <a href="/terminos" target="_blank" className="text-verde-500 hover:underline">Términos de uso</a> y la{' '}
+                <a href="/privacidad" target="_blank" className="text-verde-500 hover:underline">Política de privacidad</a> de Linkeando,
                 incluyendo el tratamiento de mis datos según la Ley 1581 de 2012.
               </label>
             </div>

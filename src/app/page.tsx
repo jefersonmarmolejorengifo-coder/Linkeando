@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { CATEGORIAS } from '@/lib/constants'
+import Footer from '@/components/Footer'
 
 type Rol = 'cliente' | 'profesional'
 
@@ -61,6 +63,13 @@ const BENEFICIOS_PRO = [
   { icon: '💳', title: 'Educación financiera',           desc: 'Aprende a gestionar tus ingresos y accede a créditos para materiales y capital de trabajo.' },
   { icon: '🚫', title: 'Sin comisiones por servicio',    desc: 'Lo que ganas es tuyo. Linkeando no cobra porcentaje por cada trabajo que realizas.' },
 ]
+const TESTIMONIOS = [
+  { nombre: 'Carolina M.', barrio: 'Ciudad Jardin', rol: 'cliente', texto: 'Necesitaba un plomero urgente un domingo y en 20 minutos ya tenia a alguien en camino. Excelente servicio.' },
+  { nombre: 'Jorge A.', barrio: 'El Ingenio', rol: 'profesional', texto: 'Desde que me registre en Linkeando, consigo 3-4 trabajos nuevos por semana en mi zona. Sin pagar comision.' },
+  { nombre: 'Maria F.', barrio: 'Granada', rol: 'cliente', texto: 'Me encanta poder ver las calificaciones antes de contratar. Da mucha confianza saber que otros ya probaron el servicio.' },
+  { nombre: 'Andres R.', barrio: 'Siloe', rol: 'profesional', texto: 'El panel me ayuda a organizar mis trabajos y ver cuanto voy ganando. Es como tener un asistente.' },
+]
+
 const FEATS_CLIENTE = [
   'Publicaciones ilimitadas',
   'Chat con profesionales sin costo',
@@ -171,7 +180,7 @@ export default function LandingPage() {
             {esCliente ? '¿Qué oficio necesitas hoy?' : '¿En qué barrio trabajas?'}
           </span>
           <Link
-            href={esCliente ? '/servicios' : '/auth/registro'}
+            href={esCliente ? '/explorar' : '/auth/registro'}
             className="px-3.5 py-1.5 text-white text-xs font-medium rounded-lg whitespace-nowrap transition-colors hover:opacity-90"
             style={{ background: accent }}
           >
@@ -257,6 +266,51 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Categorías populares */}
+        {esCliente && (
+          <div>
+            <h3 className="text-sm font-medium mb-2.5">Servicios disponibles</h3>
+            <div className="grid grid-cols-4 gap-2">
+              {CATEGORIAS.slice(0, 8).map((cat) => (
+                <Link
+                  key={cat.key}
+                  href={`/explorar?cat=${cat.key}`}
+                  className="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-borde hover:border-verde-200 transition-colors"
+                >
+                  <span className="text-xl">{cat.icon}</span>
+                  <span className="text-[10px] text-gray-500 text-center leading-tight">{cat.label}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Testimonios */}
+        <div>
+          <h3 className="text-sm font-medium mb-2.5">Lo que dicen en Cali</h3>
+          <div className="flex flex-col gap-2">
+            {TESTIMONIOS
+              .filter((t) => esCliente ? true : t.rol === 'profesional')
+              .slice(0, 3)
+              .map((t, i) => (
+              <div key={i} className="bg-white rounded-xl border border-borde p-3.5">
+                <p className="text-[12px] text-gray-600 leading-relaxed mb-2.5 italic">
+                  &ldquo;{t.texto}&rdquo;
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-verde-50 flex items-center justify-center text-[10px] font-medium text-verde-500">
+                    {t.nombre.split(' ').map(p => p[0]).join('')}
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium text-gray-700">{t.nombre}</p>
+                    <p className="text-[10px] text-gray-400">{t.barrio} · {t.rol === 'cliente' ? 'Cliente' : 'Profesional'}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Mapa */}
         <div className="bg-white rounded-xl border border-borde overflow-hidden">
           <div className="px-3.5 py-3 border-b border-[#f0f0ee]">
@@ -330,10 +384,7 @@ export default function LandingPage() {
 
       </div>
 
-      {/* ── Footer ── */}
-      <footer className="text-center py-4 px-4 text-[11px] text-gray-400 border-t border-borde">
-        Linkeando · linkeando.app · El profesional correcto para tu necesidad
-      </footer>
+      <Footer />
 
     </div>
   )

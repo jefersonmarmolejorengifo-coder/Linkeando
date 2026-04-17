@@ -64,6 +64,9 @@ export default async function Navbar() {
                   </Link>
                 </>
               )}
+              <Link href="/configuracion" className="text-gray-600 hover:text-verde-500 transition-colors">
+                Ajustes
+              </Link>
               <form action={logout}>
                 <button
                   type="submit"
@@ -77,6 +80,9 @@ export default async function Navbar() {
             <>
               <Link href="/mapa" className="text-gray-600 hover:text-verde-500 transition-colors">
                 Mapa
+              </Link>
+              <Link href="/ayuda" className="text-gray-600 hover:text-verde-500 transition-colors">
+                Ayuda
               </Link>
               <Link
                 href="/auth/login"
