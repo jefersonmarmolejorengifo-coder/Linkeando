@@ -9,7 +9,7 @@ import type { Solicitud } from '@/types'
 
 const ESTADO_BADGES: Record<string, { label: string; bg: string; text: string; border: string }> = {
   abierta: { label: 'Abierta', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' },
-  en_proceso: { label: 'En curso', bg: 'bg-[#E1F5EE]', text: 'text-[#085041]', border: 'border-[#9FE1CB]' },
+  en_proceso: { label: 'En curso', bg: 'bg-verde-50', text: 'text-pro-500', border: 'border-verde-200' },
   completada: { label: 'Completada', bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
   cancelada: { label: 'Cancelada', bg: 'bg-gray-50', text: 'text-gray-500', border: 'border-gray-200' },
 }
@@ -37,11 +37,11 @@ export default function MisSolicitudesPage() {
   const filtradas = filtro ? solicitudes.filter(s => s.estado === filtro) : solicitudes
 
   return (
-    <div className="min-h-screen bg-[#f5f5f3] flex justify-center">
+    <div className="min-h-screen bg-fondo flex justify-center">
       <div className="w-full max-w-sm flex flex-col min-h-screen">
-        <div className="bg-[#1D9E75] px-4 pt-4 pb-4">
+        <div className="bg-verde-500 px-4 pt-4 pb-4">
           <h1 className="text-[17px] font-medium text-white">Mis solicitudes</h1>
-          <p className="text-[12px] text-[#9FE1CB] mt-0.5">{solicitudes.length} solicitudes en total</p>
+          <p className="text-[12px] text-verde-200 mt-0.5">{solicitudes.length} solicitudes en total</p>
         </div>
 
         {/* Filtros de estado */}
@@ -56,7 +56,7 @@ export default function MisSolicitudesPage() {
             <button
               key={f.key ?? 'all'}
               onClick={() => setFiltro(f.key)}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] border transition-colors ${filtro === f.key ? 'bg-[#1D9E75] text-white border-[#1D9E75]' : 'bg-white text-gray-500 border-gray-200'}`}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] border transition-colors ${filtro === f.key ? 'bg-verde-500 text-white border-verde-500' : 'bg-white text-gray-500 border-gray-200'}`}
             >
               {f.label}
             </button>
@@ -68,14 +68,14 @@ export default function MisSolicitudesPage() {
           {loading ? (
             <div className="space-y-2">{[1, 2, 3].map(i => <div key={i} className="h-24 bg-white rounded-xl animate-pulse" />)}</div>
           ) : filtradas.length === 0 ? (
-            <div className="bg-white rounded-xl border border-[#e8e8e6] p-6 text-center">
+            <div className="bg-white rounded-xl border border-borde p-6 text-center">
               <p className="text-sm text-gray-400 mb-3">
                 {solicitudes.length === 0 ? 'Aún no tienes solicitudes.' : 'No hay solicitudes con este filtro.'}
               </p>
               {solicitudes.length === 0 && (
                 <button
                   onClick={() => router.push('/publicar')}
-                  className="bg-[#1D9E75] text-white px-4 py-2 rounded-xl text-[13px] font-medium"
+                  className="bg-verde-500 text-white px-4 py-2 rounded-xl text-[13px] font-medium"
                 >
                   Publicar mi primera solicitud
                 </button>
@@ -90,7 +90,7 @@ export default function MisSolicitudesPage() {
                   <button
                     key={sol.id}
                     onClick={() => router.push(`/solicitudes/${sol.id}`)}
-                    className="w-full bg-white rounded-xl border border-[#e8e8e6] p-3 text-left hover:border-[#1D9E75] transition-colors"
+                    className="w-full bg-white rounded-xl border border-borde p-3 text-left hover:border-verde-500 transition-colors"
                   >
                     <div className="flex justify-between items-start mb-1">
                       <h3 className="text-[13px] font-medium flex-1 mr-2">{sol.titulo}</h3>
@@ -108,7 +108,7 @@ export default function MisSolicitudesPage() {
                     </div>
                     <div className="text-[10px] text-gray-400 mt-1">
                       {new Date(sol.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      {sol.urgente && <span className="ml-1 text-[#D85A30] font-medium">🚨 Urgente</span>}
+                      {sol.urgente && <span className="ml-1 text-urgente-500 font-medium">🚨 Urgente</span>}
                     </div>
                   </button>
                 )
@@ -120,7 +120,7 @@ export default function MisSolicitudesPage() {
         {/* FAB publicar */}
         <button
           onClick={() => router.push('/publicar')}
-          className="fixed bottom-20 right-4 w-12 h-12 bg-[#1D9E75] hover:bg-[#178a65] text-white rounded-full shadow-lg flex items-center justify-center text-xl transition-colors z-30"
+          className="fixed bottom-20 right-4 w-12 h-12 bg-verde-500 hover:bg-verde-600 text-white rounded-full shadow-lg flex items-center justify-center text-xl transition-colors z-30"
         >
           +
         </button>

@@ -70,15 +70,15 @@ export default function PanelMensajes() {
 
   return (
     <div className="px-4 pt-4">
-      <div className="bg-[#085041] rounded-xl px-4 py-3 mb-4">
+      <div className="bg-pro-500 rounded-xl px-4 py-3 mb-4">
         <h1 className="text-[16px] font-medium text-white">Mensajes</h1>
-        <p className="text-[12px] text-[#9FE1CB]">Conversaciones con tus clientes</p>
+        <p className="text-[12px] text-verde-200">Conversaciones con tus clientes</p>
       </div>
 
       {loading ? (
         <div className="space-y-3">{[1, 2, 3].map(i => <div key={i} className="h-20 bg-white rounded-xl animate-pulse" />)}</div>
       ) : chats.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-6 text-center text-sm text-gray-400">
+        <div className="bg-white rounded-xl border border-borde p-6 text-center text-sm text-gray-400">
           No tienes conversaciones activas.
         </div>
       ) : (
@@ -87,7 +87,7 @@ export default function PanelMensajes() {
             <button
               key={chat.solicitud_id}
               onClick={() => router.push(`/chat/${chat.solicitud_id}`)}
-              className="w-full bg-white rounded-xl border border-[#e8e8e6] p-3 text-left hover:border-[#085041] transition-colors"
+              className="w-full bg-white rounded-xl border border-borde p-3 text-left hover:border-pro-500 transition-colors"
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1 min-w-0">
@@ -100,7 +100,7 @@ export default function PanelMensajes() {
                     {new Date(chat.ultimo_fecha).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}
                   </span>
                   {chat.no_leidos > 0 && (
-                    <span className="bg-[#085041] text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                    <span className="bg-pro-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
                       {chat.no_leidos}
                     </span>
                   )}

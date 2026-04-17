@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
-import { CATEGORIAS } from '@/lib/constants'
+import { CATEGORIAS, CATEGORIA_COLORS } from '@/lib/constants'
 import type { Usuario, Solicitud } from '@/types'
 
 type Mode = 'cliente' | 'profesional'
@@ -17,10 +17,9 @@ function initials(nombre: string) {
 }
 
 function avatarColor(id: string) {
-  const palette = ['#1D9E75', '#185FA5', '#7C3AED', '#B45309', '#0F766E', '#CA8A04', '#D85A30']
   let h = 0
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % palette.length
-  return palette[h]
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % CATEGORIA_COLORS.length
+  return CATEGORIA_COLORS[h]
 }
 
 function Stars({ rating }: { rating: number }) {
@@ -48,7 +47,7 @@ const LogoSVG = () => (
 /* ── Barra de navegación inferior ────────────────────────────── */
 function BottomNavCliente({ router, msgDot }: { router: ReturnType<typeof useRouter>; msgDot: boolean }) {
   return (
-    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-[#e8e8e6] flex justify-around py-2 z-40">
+    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-borde flex justify-around py-2 z-40">
       {[
         { label: 'Inicio',   href: '/inicio',      active: true,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M3 12L12 3l9 9M4 10v10h16V10"/></svg> },
@@ -64,7 +63,7 @@ function BottomNavCliente({ router, msgDot }: { router: ReturnType<typeof useRou
         <button
           key={item.label}
           onClick={() => router.push(item.href)}
-          className={`flex flex-col items-center gap-0.5 text-[9px] px-2 border-none bg-transparent ${item.active ? 'text-[#1D9E75]' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex flex-col items-center gap-0.5 text-[9px] px-2 border-none bg-transparent ${item.active ? 'text-verde-500' : 'text-gray-400 hover:text-gray-600'}`}
         >
           {item.icon}
           <span className="relative">
@@ -79,7 +78,7 @@ function BottomNavCliente({ router, msgDot }: { router: ReturnType<typeof useRou
 
 function BottomNavPro({ router, chatDot }: { router: ReturnType<typeof useRouter>; chatDot: boolean }) {
   return (
-    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-[#e8e8e6] flex justify-around py-2 z-40">
+    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-borde flex justify-around py-2 z-40">
       {[
         { label: 'Dashboard',   href: '/panel',              active: true,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> },
@@ -95,7 +94,7 @@ function BottomNavPro({ router, chatDot }: { router: ReturnType<typeof useRouter
         <button
           key={item.label}
           onClick={() => router.push(item.href)}
-          className={`flex flex-col items-center gap-0.5 text-[9px] px-2 border-none bg-transparent ${item.active ? 'text-[#085041]' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex flex-col items-center gap-0.5 text-[9px] px-2 border-none bg-transparent ${item.active ? 'text-pro-500' : 'text-gray-400 hover:text-gray-600'}`}
         >
           {item.icon}
           <span className="relative">
@@ -134,13 +133,13 @@ function ViewCliente({
   return (
     <>
       {/* Hero */}
-      <div className="bg-[#1D9E75] px-7 pt-8 pb-9 text-center flex-shrink-0">
+      <div className="bg-verde-500 px-7 pt-8 pb-9 text-center flex-shrink-0">
         <LogoSVG />
         <div className="text-[32px] font-medium text-white tracking-tight leading-none mt-3">Linkeando</div>
-        <div className="text-[13px] text-[#9FE1CB] mt-1">El profesional correcto para tu necesidad</div>
+        <div className="text-[13px] text-verde-200 mt-1">El profesional correcto para tu necesidad</div>
         <button
           onClick={onUbiClick}
-          className="inline-flex items-center gap-1.5 bg-white/14 border border-white/20 rounded-full px-3 py-1.5 text-[11px] text-[#E1F5EE] mt-3 hover:bg-white/20 transition-colors"
+          className="inline-flex items-center gap-1.5 bg-white/14 border border-white/20 rounded-full px-3 py-1.5 text-[11px] text-verde-50 mt-3 hover:bg-white/20 transition-colors"
         >
           <svg width="8" height="8" viewBox="0 0 10 10" fill="#9FE1CB"><circle cx="5" cy="5" r="4"/></svg>
           {ubicacion}
@@ -149,7 +148,7 @@ function ViewCliente({
 
       {/* Buscador flotante */}
       <div className="mx-4 -mt-5 relative z-10">
-        <div className="bg-white rounded-xl border border-[#e8e8e6] px-3.5 py-3 flex items-center gap-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
+        <div className="bg-white rounded-xl border border-borde px-3.5 py-3 flex items-center gap-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input
             type="text"
@@ -158,7 +157,10 @@ function ViewCliente({
             placeholder="¿Qué oficio necesitas hoy?"
             className="flex-1 border-none outline-none text-[13px] bg-transparent text-gray-800 placeholder:text-gray-400"
           />
-          <button className="bg-[#1D9E75] text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-[#178a65] transition-colors">
+          <button
+            onClick={() => router.push(search.trim() ? `/explorar?q=${encodeURIComponent(search.trim())}` : '/explorar')}
+            className="bg-verde-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-verde-600 transition-colors"
+          >
             Buscar
           </button>
         </div>
@@ -171,7 +173,7 @@ function ViewCliente({
         <div>
           <div className="flex justify-between items-center mb-2.5">
             <h3 className="text-sm font-medium">Categorías</h3>
-            <button onClick={() => setCatActiva(null)} className="text-xs text-[#1D9E75]">Ver todas</button>
+            <button onClick={() => setCatActiva(null)} className="text-xs text-verde-500">Ver todas</button>
           </div>
           <div className="flex gap-2.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }}>
             {CATEGORIAS.map((cat) => (
@@ -181,7 +183,7 @@ function ViewCliente({
                 className="flex flex-col items-center gap-1.5 flex-shrink-0"
               >
                 <div
-                  className={`w-[50px] h-[50px] rounded-full flex items-center justify-center text-[21px] border transition-all ${catActiva === cat.key ? 'border-[#1D9E75] bg-[#E1F5EE]' : 'border-[#e8e8e6] bg-white hover:border-[#1D9E75]'}`}
+                  className={`w-[50px] h-[50px] rounded-full flex items-center justify-center text-[21px] border transition-all ${catActiva === cat.key ? 'border-verde-500 bg-verde-50' : 'border-borde bg-white hover:border-verde-500'}`}
                 >
                   {cat.icon}
                 </div>
@@ -192,23 +194,23 @@ function ViewCliente({
         </div>
 
         {/* Banner */}
-        <div className="bg-[#E1F5EE] rounded-xl border border-[#9FE1CB] px-3.5 py-2.5 flex justify-between items-center">
+        <div className="bg-verde-50 rounded-xl border border-verde-200 px-3.5 py-2.5 flex justify-between items-center">
           <div>
-            <strong className="block text-[13px] font-medium text-[#085041]">Ferretería El Constructor</strong>
+            <strong className="block text-[13px] font-medium text-pro-500">Ferretería El Constructor</strong>
             <span className="text-[11px] text-[#0F6E56]">Materiales con descuento</span>
           </div>
-          <span className="text-[9px] text-[#0F6E56] bg-[#9FE1CB] px-2 py-1 rounded font-medium self-start">Patrocinado</span>
+          <span className="text-[9px] text-[#0F6E56] bg-verde-200 px-2 py-1 rounded font-medium self-start">Patrocinado</span>
         </div>
 
         {/* Profesionales */}
         <div>
           <div className="flex justify-between items-center mb-2.5">
             <h3 className="text-sm font-medium">{catActiva ? CATEGORIAS.find(c => c.key === catActiva)?.label : 'Cerca de ti ahora'}</h3>
-            <button onClick={() => router.push('/mapa')} className="text-xs text-[#1D9E75]">Ver mapa</button>
+            <button onClick={() => router.push('/mapa')} className="text-xs text-verde-500">Ver mapa</button>
           </div>
           <div className="flex flex-col gap-2">
             {loading ? [1,2,3].map(i => (
-              <div key={i} className="bg-white rounded-xl border border-[#e8e8e6] p-3 flex gap-3 items-center animate-pulse">
+              <div key={i} className="bg-white rounded-xl border border-borde p-3 flex gap-3 items-center animate-pulse">
                 <div className="w-11 h-11 rounded-full bg-gray-200 flex-shrink-0"/>
                 <div className="flex-1 space-y-2"><div className="h-3 bg-gray-200 rounded w-2/3"/><div className="h-2 bg-gray-200 rounded w-1/2"/></div>
               </div>
@@ -224,7 +226,7 @@ function ViewCliente({
                 <button
                   key={pro.id}
                   onClick={() => router.push(`/perfil/${pro.id}`)}
-                  className="bg-white rounded-xl border border-[#e8e8e6] px-3 py-3 flex gap-3 items-center text-left hover:border-[#1D9E75] transition-colors"
+                  className="bg-white rounded-xl border border-borde px-3 py-3 flex gap-3 items-center text-left hover:border-verde-500 transition-colors"
                 >
                   <div
                     className="w-11 h-11 rounded-full flex items-center justify-center text-[14px] font-medium text-white flex-shrink-0 border-2"
@@ -232,7 +234,7 @@ function ViewCliente({
                   >
                     {initials(pro.nombre)}
                     {isPremium && (
-                      <span className="absolute -top-0.5 -right-0.5 bg-[#EF9F27] text-[7px] rounded-full w-3.5 h-3.5 flex items-center justify-center">★</span>
+                      <span className="absolute -top-0.5 -right-0.5 bg-premium-500 text-[7px] rounded-full w-3.5 h-3.5 flex items-center justify-center">★</span>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -244,10 +246,10 @@ function ViewCliente({
                     {pro.rating_promedio > 0 && <Stars rating={pro.rating_promedio} />}
                   </div>
                   <div className="text-right flex-shrink-0">
-                    {pro.tarifa && <p className="text-[12px] font-medium text-[#1D9E75]">Desde ${(pro.tarifa/1000).toFixed(0)}k</p>}
+                    {pro.tarifa && <p className="text-[12px] font-medium text-verde-500">Desde ${(pro.tarifa/1000).toFixed(0)}k</p>}
                     <div className="flex gap-1 mt-1 justify-end flex-wrap">
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#E1F5EE] text-[#085041] border border-[#9FE1CB]">Disponible</span>
-                      {isPremium && <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#FAEEDA] text-[#633806] border border-[#FAC775]">Premium</span>}
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-verde-50 text-pro-500 border border-verde-200">Disponible</span>
+                      {isPremium && <span className="text-[10px] px-1.5 py-0.5 rounded bg-premium-100 text-[#633806] border border-premium-300">Premium</span>}
                     </div>
                   </div>
                 </button>
@@ -293,11 +295,11 @@ function ViewProfesional({
   return (
     <>
       {/* Header oscuro */}
-      <div className="bg-[#085041] flex-shrink-0">
+      <div className="bg-pro-500 flex-shrink-0">
         {/* Topbar */}
         <div className="px-4 pt-3 pb-2 flex items-center justify-between">
           <h2 className="text-[15px] font-medium text-white">Panel profesional</h2>
-          <button className="text-[11px] text-white/80 bg-[#EF9F27] px-2.5 py-1 rounded-lg font-medium">★ Premium</button>
+          <button className="text-[11px] text-white/80 bg-premium-500 px-2.5 py-1 rounded-lg font-medium">★ Premium</button>
         </div>
 
         {/* Perfil */}
@@ -305,35 +307,35 @@ function ViewProfesional({
           <div className="flex items-center gap-3">
             <div className="relative">
               <div
-                className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-medium text-white border-2 border-[#EF9F27]"
+                className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-medium text-white border-2 border-premium-500"
                 style={{ background: usuario ? avatarColor(usuario.id) : '#1D9E75' }}
               >
                 {usuario ? initials(usuario.nombre) : '…'}
-                <span className="absolute -top-1 -right-1 bg-[#EF9F27] text-[7px] rounded-full w-4 h-4 flex items-center justify-center">★</span>
+                <span className="absolute -top-1 -right-1 bg-premium-500 text-[7px] rounded-full w-4 h-4 flex items-center justify-center">★</span>
               </div>
             </div>
             <div className="flex-1">
               <div className="text-[16px] font-medium text-white">{usuario?.nombre ?? '…'}</div>
-              <div className="text-[12px] text-[#5DCAA5] mt-0.5">
+              <div className="text-[12px] text-verde-300 mt-0.5">
                 {catInfo ? `${catInfo.icon} ${catInfo.label}` : usuario?.categoria ?? ''}
                 {usuario?.barrio ? ` · ${usuario.barrio}` : ''}
               </div>
               {/* Toggle disponible */}
               <button
                 onClick={() => setDisponible(!disponible)}
-                className="inline-flex items-center gap-1.5 mt-1.5 text-[11px] text-[#E1F5EE]"
+                className="inline-flex items-center gap-1.5 mt-1.5 text-[11px] text-verde-50"
               >
-                <span className={`w-2 h-2 rounded-full ${disponible ? 'bg-[#9FE1CB]' : 'bg-[#F5C4B3]'}`}/>
+                <span className={`w-2 h-2 rounded-full ${disponible ? 'bg-verde-200' : 'bg-urgente-200'}`}/>
                 {disponible ? 'Disponible' : 'No disponible'}
               </button>
             </div>
           </div>
           {/* Toggle barra */}
-          <div className="bg-[#04342C] rounded-xl px-3.5 py-2.5 flex items-center justify-between mt-3">
-            <span className="text-[13px] text-[#E1F5EE]">Disponible para trabajos</span>
+          <div className="bg-pro-700 rounded-xl px-3.5 py-2.5 flex items-center justify-between mt-3">
+            <span className="text-[13px] text-verde-50">Disponible para trabajos</span>
             <button
               onClick={() => setDisponible(!disponible)}
-              className={`w-10 h-[22px] rounded-full relative transition-colors flex-shrink-0 ${disponible ? 'bg-[#9FE1CB]' : 'bg-gray-500'}`}
+              className={`w-10 h-[22px] rounded-full relative transition-colors flex-shrink-0 ${disponible ? 'bg-verde-200' : 'bg-gray-500'}`}
             >
               <span className={`absolute top-[2px] w-[18px] h-[18px] bg-white rounded-full transition-all ${disponible ? 'left-[20px]' : 'left-[2px]'}`}/>
             </button>
@@ -347,13 +349,13 @@ function ViewProfesional({
         {/* Métricas */}
         <div className="grid grid-cols-2 gap-2">
           {[
-            { n: `${usuario?.total_servicios ?? 0}`, l: 'Servicios realizados', d: '↑ este mes', dc: 'text-[#1D9E75]' },
-            { n: usuario?.rating_promedio ? usuario.rating_promedio.toFixed(1) : '–', l: 'Calificación', d: '↑ Excelente', dc: 'text-[#1D9E75]' },
-            { n: '$780k', l: 'Ingresos brutos', d: '↑ +18% vs mes ant.', dc: 'text-[#1D9E75]' },
-            { n: '~28m', l: 'Tiempo llegada', d: 'Meta: 25 min', dc: 'text-[#D85A30]' },
+            { n: `${usuario?.total_servicios ?? 0}`, l: 'Servicios realizados', d: '↑ este mes', dc: 'text-verde-500' },
+            { n: usuario?.rating_promedio ? usuario.rating_promedio.toFixed(1) : '–', l: 'Calificación', d: '↑ Excelente', dc: 'text-verde-500' },
+            { n: '$780k', l: 'Ingresos brutos', d: '↑ +18% vs mes ant.', dc: 'text-verde-500' },
+            { n: '~28m', l: 'Tiempo llegada', d: 'Meta: 25 min', dc: 'text-urgente-500' },
           ].map((m) => (
-            <div key={m.l} className="bg-white rounded-xl border border-[#e8e8e6] p-3">
-              <div className="text-[20px] font-medium text-[#085041]">{m.n}</div>
+            <div key={m.l} className="bg-white rounded-xl border border-borde p-3">
+              <div className="text-[20px] font-medium text-pro-500">{m.n}</div>
               <div className="text-[10px] text-gray-400 mt-0.5">{m.l}</div>
               <div className={`text-[10px] mt-0.5 ${m.dc}`}>{m.d}</div>
             </div>
@@ -361,22 +363,22 @@ function ViewProfesional({
         </div>
 
         {/* Gráfica de ingresos */}
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-3">
+        <div className="bg-white rounded-xl border border-borde p-3">
           <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-3">Ingresos · últimos 7 meses</div>
           <div className="flex items-end gap-1.5 h-14">
             {INGRESOS.map((val, i) => (
               <div key={i} className="flex-1 flex flex-col items-center justify-end gap-0.5">
                 <div
-                  className={`w-full rounded-t-[3px] ${i === 6 ? 'bg-[#085041]' : 'bg-[#E1F5EE]'}`}
+                  className={`w-full rounded-t-[3px] ${i === 6 ? 'bg-pro-500' : 'bg-verde-50'}`}
                   style={{ height: Math.round(val / MAX_ING * 52) }}
                 />
                 <span className="text-[8px] text-gray-400">{MESES[i]}</span>
               </div>
             ))}
           </div>
-          <div className="bg-[#f5f5f3] rounded-lg px-3 py-2.5 mt-3">
+          <div className="bg-fondo rounded-lg px-3 py-2.5 mt-3">
             <div className="text-[11px] text-gray-400 mb-0.5">Proyección fin de año</div>
-            <div className="text-[20px] font-medium text-[#085041]">$8.611.200</div>
+            <div className="text-[20px] font-medium text-pro-500">$8.611.200</div>
             <div className="text-[11px] text-gray-400">Sin comisiones · tus ingresos son tuyos</div>
           </div>
         </div>
@@ -385,21 +387,21 @@ function ViewProfesional({
         <div>
           <div className="flex justify-between items-center mb-2.5">
             <h3 className="text-sm font-medium">{solicitudes.length > 0 ? 'Solicitud reciente' : 'Solicitudes disponibles'}</h3>
-            <button onClick={() => router.push('/solicitudes')} className="text-xs text-[#085041]">Ver todas →</button>
+            <button onClick={() => router.push('/solicitudes')} className="text-xs text-pro-500">Ver todas →</button>
           </div>
           {loadingPro ? (
-            <div className="bg-white rounded-xl border border-[#e8e8e6] p-3 animate-pulse h-24"/>
+            <div className="bg-white rounded-xl border border-borde p-3 animate-pulse h-24"/>
           ) : solicitudes.length === 0 ? (
-            <div className="bg-white rounded-xl border border-[#e8e8e6] p-4 text-center text-sm text-gray-400">
+            <div className="bg-white rounded-xl border border-borde p-4 text-center text-sm text-gray-400">
               No hay solicitudes en tu zona por ahora.
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-[#e8e8e6] p-3">
+            <div className="bg-white rounded-xl border border-borde p-3">
               <div className="flex justify-between items-start mb-1">
                 <h3 className="text-[14px] font-medium flex-1 mr-2">{solicitudes[0].titulo}</h3>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#E1F5EE] text-[#085041] border border-[#9FE1CB] flex-shrink-0">Nueva</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-verde-50 text-pro-500 border border-verde-200 flex-shrink-0">Nueva</span>
               </div>
-              <div className="text-[10px] font-mono bg-[#f5f5f3] text-gray-400 px-2 py-1 rounded border border-[#e8e8e6] inline-block mb-2">
+              <div className="text-[10px] font-mono bg-fondo text-gray-400 px-2 py-1 rounded border border-borde inline-block mb-2">
                 ID: LNK-{solicitudes[0].id.slice(0, 8).toUpperCase()}
               </div>
               <div className="text-[12px] text-gray-500 mb-2.5">
@@ -408,7 +410,7 @@ function ViewProfesional({
               </div>
               <button
                 onClick={() => router.push('/solicitudes')}
-                className="w-full bg-[#085041] hover:bg-[#04342C] text-white py-2 rounded-lg text-[12px] font-medium transition-colors"
+                className="w-full bg-pro-500 hover:bg-pro-700 text-white py-2 rounded-lg text-[12px] font-medium transition-colors"
               >
                 Ver y postular
               </button>
@@ -417,29 +419,29 @@ function ViewProfesional({
         </div>
 
         {/* Mis especialidades */}
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-3">
+        <div className="bg-white rounded-xl border border-borde p-3">
           <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-2.5">Mis especialidades</div>
           <div className="flex gap-2 flex-wrap">
             {catInfo ? (
-              <span className="text-[12px] px-3 py-1.5 rounded-full bg-[#E1F5EE] text-[#085041] border border-[#9FE1CB]">
+              <span className="text-[12px] px-3 py-1.5 rounded-full bg-verde-50 text-pro-500 border border-verde-200">
                 {catInfo.icon} {catInfo.label}
               </span>
             ) : (
               <span className="text-[12px] text-gray-400">Sin especialidad configurada</span>
             )}
           </div>
-          <button onClick={() => router.push('/perfil')} className="mt-3 w-full py-2 text-[12px] text-[#085041] border border-[#085041] rounded-lg hover:bg-[#E1F5EE] transition-colors">
+          <button onClick={() => router.push('/perfil')} className="mt-3 w-full py-2 text-[12px] text-pro-500 border border-pro-500 rounded-lg hover:bg-verde-50 transition-colors">
             Editar especialidades
           </button>
         </div>
 
         {/* Banner */}
-        <div className="bg-[#FAEEDA] rounded-xl border border-[#FAC775] px-3.5 py-2.5 flex justify-between items-center">
+        <div className="bg-premium-100 rounded-xl border border-premium-300 px-3.5 py-2.5 flex justify-between items-center">
           <div>
             <strong className="block text-[13px] font-medium text-[#412402]">Bancamía · Microcrédito</strong>
             <span className="text-[11px] text-[#854F0B]">Financia materiales y capital de trabajo</span>
           </div>
-          <span className="text-[9px] text-[#412402] bg-[#FAC775] px-2 py-1 rounded font-medium self-start">Patrocinado</span>
+          <span className="text-[9px] text-[#412402] bg-premium-300 px-2 py-1 rounded font-medium self-start">Patrocinado</span>
         </div>
 
         <div className="h-1"/>
@@ -500,7 +502,11 @@ export default function InicioPage() {
         .then(({ data: u }) => {
           if (!u) return
           setUsuario(u as Usuario)
-          if ((u as Usuario).tipo === 'profesional') setMode('profesional')
+          if ((u as Usuario).tipo === 'profesional') {
+            setMode('profesional')
+            router.push('/panel')
+            return
+          }
         })
 
       // Mensajes no leídos
@@ -515,27 +521,27 @@ export default function InicioPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#f5f5f3] flex justify-center">
+    <div className="min-h-screen bg-fondo flex justify-center">
       <div className="w-full max-w-sm flex flex-col min-h-screen relative">
 
         {/* ── Mode bar ── */}
         <div
-          className="sticky top-0 z-50 border-b border-[#e8e8e6] px-4 py-2 flex items-center justify-between"
+          className="sticky top-0 z-50 border-b border-borde px-4 py-2 flex items-center justify-between"
           style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(12px)' }}
         >
           <span className="text-[15px] font-medium tracking-tight" style={{ color: mode === 'cliente' ? '#1D9E75' : '#085041' }}>
             Linkeando
           </span>
-          <div className="flex bg-[#f5f5f3] rounded-full p-0.5 border border-[#e8e8e6]">
+          <div className="flex bg-fondo rounded-full p-0.5 border border-borde">
             <button
               onClick={() => setMode('cliente')}
-              className={`px-3 py-1.5 rounded-full text-[11px] transition-all ${mode === 'cliente' ? 'bg-[#1D9E75] text-white font-medium' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`px-3 py-1.5 rounded-full text-[11px] transition-all ${mode === 'cliente' ? 'bg-verde-500 text-white font-medium' : 'text-gray-400 hover:text-gray-600'}`}
             >
               🏠 Cliente
             </button>
             <button
               onClick={() => setMode('profesional')}
-              className={`px-3 py-1.5 rounded-full text-[11px] transition-all ${mode === 'profesional' ? 'bg-[#085041] text-white font-medium' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`px-3 py-1.5 rounded-full text-[11px] transition-all ${mode === 'profesional' ? 'bg-pro-500 text-white font-medium' : 'text-gray-400 hover:text-gray-600'}`}
             >
               🧰 Profesional
             </button>

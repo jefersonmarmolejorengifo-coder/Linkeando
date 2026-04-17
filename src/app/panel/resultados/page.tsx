@@ -6,7 +6,7 @@ import type { CalProfesional, Incidencia } from '@/types'
 
 function Stars({ rating }: { rating: number }) {
   const full = Math.round(rating)
-  return <span className="text-[#EF9F27] text-[12px]">{'★'.repeat(full)}{'☆'.repeat(5 - full)}</span>
+  return <span className="text-premium-500 text-[12px]">{'★'.repeat(full)}{'☆'.repeat(5 - full)}</span>
 }
 
 export default function PanelResultados() {
@@ -39,16 +39,16 @@ export default function PanelResultados() {
 
   return (
     <div className="px-4 pt-4">
-      <div className="bg-[#085041] rounded-xl px-4 py-3 mb-4">
+      <div className="bg-pro-500 rounded-xl px-4 py-3 mb-4">
         <h1 className="text-[16px] font-medium text-white">Mis resultados</h1>
-        <p className="text-[12px] text-[#9FE1CB]">Calificaciones e incidencias</p>
+        <p className="text-[12px] text-verde-200">Calificaciones e incidencias</p>
       </div>
 
       {/* Promedios */}
       {promedios ? (
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-4 mb-4">
+        <div className="bg-white rounded-xl border border-borde p-4 mb-4">
           <div className="text-center mb-3">
-            <div className="text-3xl font-bold text-[#085041]">{promedios.general.toFixed(1)}</div>
+            <div className="text-3xl font-bold text-pro-500">{promedios.general.toFixed(1)}</div>
             <Stars rating={promedios.general} />
             <p className="text-[11px] text-gray-400 mt-1">{calificaciones.length} calificaciones</p>
           </div>
@@ -61,21 +61,21 @@ export default function PanelResultados() {
               <div key={d.label} className="flex items-center gap-2">
                 <span className="text-[11px] text-gray-500 w-32 flex-shrink-0">{d.label}</span>
                 <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-[#085041] rounded-full" style={{ width: `${(d.val / 5) * 100}%` }} />
+                  <div className="h-full bg-pro-500 rounded-full" style={{ width: `${(d.val / 5) * 100}%` }} />
                 </div>
-                <span className="text-[11px] font-medium text-[#085041] w-8 text-right">{d.val.toFixed(1)}</span>
+                <span className="text-[11px] font-medium text-pro-500 w-8 text-right">{d.val.toFixed(1)}</span>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-6 text-center text-sm text-gray-400 mb-4">
+        <div className="bg-white rounded-xl border border-borde p-6 text-center text-sm text-gray-400 mb-4">
           Aún no tienes calificaciones.
         </div>
       )}
 
       {/* Incidencias */}
-      <div className="bg-white rounded-xl border border-[#e8e8e6] p-4 mb-4">
+      <div className="bg-white rounded-xl border border-borde p-4 mb-4">
         <h2 className="text-[13px] font-medium mb-3">Historial de incidencias</h2>
         {incidencias.length === 0 ? (
           <div className="flex items-center gap-2 text-[12px] text-green-600">
@@ -102,7 +102,7 @@ export default function PanelResultados() {
 
       {/* Comentarios recientes */}
       {calificaciones.filter(c => c.comentario).length > 0 && (
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-4 mb-4">
+        <div className="bg-white rounded-xl border border-borde p-4 mb-4">
           <h2 className="text-[13px] font-medium mb-3">Comentarios recientes</h2>
           <div className="space-y-3">
             {calificaciones.filter(c => c.comentario).slice(0, 10).map((cal) => (

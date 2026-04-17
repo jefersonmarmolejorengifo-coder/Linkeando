@@ -9,7 +9,7 @@ function Btn() {
     <button
       type="submit"
       disabled={pending}
-      className="bg-verde-500 hover:bg-verde-600 disabled:opacity-60 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+      className="bg-verde-500 hover:bg-verde-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors"
     >
       {pending ? 'Aceptando…' : 'Aceptar propuesta'}
     </button>

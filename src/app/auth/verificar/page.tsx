@@ -84,12 +84,12 @@ export default function VerificarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-fondo flex items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-2xl overflow-hidden shadow-md border border-gray-100">
-        <div className="bg-[#1D9E75] px-6 pt-8 pb-6 text-center">
+        <div className="bg-verde-500 px-6 pt-8 pb-6 text-center">
           <div className="text-3xl mb-2">📱</div>
           <h1 className="text-xl font-medium text-white">Verificar celular</h1>
-          <p className="text-[13px] text-[#9FE1CB] mt-1">
+          <p className="text-[13px] text-verde-200 mt-1">
             Ingresa el código de 6 dígitos enviado a
           </p>
           <p className="text-[14px] text-white font-medium mt-0.5">{celular || '***'}</p>
@@ -115,20 +115,20 @@ export default function VerificarPage() {
                 onChange={(e) => handleChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 disabled={verifying}
-                className="w-12 h-14 text-center text-xl font-medium border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#1D9E75] focus:ring-2 focus:ring-[#1D9E75]/20 transition-colors disabled:opacity-50"
+                className="w-12 h-14 text-center text-xl font-medium border-2 border-gray-200 rounded-xl focus:outline-none focus:border-verde-500 focus:ring-2 focus:ring-verde-500/20 transition-colors disabled:opacity-50"
               />
             ))}
           </div>
 
           {verifying && (
-            <div className="text-center text-sm text-[#1D9E75] mb-4">Verificando...</div>
+            <div className="text-center text-sm text-verde-500 mb-4">Verificando...</div>
           )}
 
           <div className="text-center">
             <button
               onClick={handleResend}
               disabled={resendTimer > 0}
-              className="text-sm text-[#1D9E75] hover:underline disabled:text-gray-400 disabled:no-underline"
+              className="text-sm text-verde-500 hover:underline disabled:text-gray-400 disabled:no-underline"
             >
               {resendTimer > 0
                 ? `Reenviar código en ${resendTimer}s`

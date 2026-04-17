@@ -50,14 +50,14 @@ export default function PanelAlertas() {
 
   return (
     <div className="px-4 pt-4">
-      <div className="bg-[#085041] rounded-xl px-4 py-3 mb-4">
+      <div className="bg-pro-500 rounded-xl px-4 py-3 mb-4">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-[16px] font-medium text-white">Alertas</h1>
-            <p className="text-[12px] text-[#9FE1CB]">{noLeidas > 0 ? `${noLeidas} sin leer` : 'Todas al día'}</p>
+            <p className="text-[12px] text-verde-200">{noLeidas > 0 ? `${noLeidas} sin leer` : 'Todas al día'}</p>
           </div>
           {noLeidas > 0 && (
-            <button onClick={marcarTodas} className="text-[11px] text-[#9FE1CB] underline">
+            <button onClick={marcarTodas} className="text-[11px] text-verde-200 underline">
               Marcar todas como leídas
             </button>
           )}
@@ -67,7 +67,7 @@ export default function PanelAlertas() {
       {loading ? (
         <div className="space-y-3">{[1, 2, 3].map(i => <div key={i} className="h-16 bg-white rounded-xl animate-pulse" />)}</div>
       ) : alertas.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-6 text-center text-sm text-gray-400">
+        <div className="bg-white rounded-xl border border-borde p-6 text-center text-sm text-gray-400">
           No tienes alertas por el momento.
         </div>
       ) : (
@@ -83,14 +83,14 @@ export default function PanelAlertas() {
               }}
               className={`w-full rounded-xl border p-3 text-left transition-colors ${
                 alerta.leida
-                  ? 'bg-white border-[#e8e8e6]'
-                  : 'bg-[#E1F5EE] border-[#9FE1CB]'
+                  ? 'bg-white border-borde'
+                  : 'bg-verde-50 border-verde-200'
               }`}
             >
               <div className="flex items-start gap-2.5">
                 <span className="text-lg flex-shrink-0">{TIPO_ICONS[alerta.tipo] ?? '🔔'}</span>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-[13px] ${alerta.leida ? 'text-gray-600' : 'font-medium text-[#085041]'}`}>
+                  <p className={`text-[13px] ${alerta.leida ? 'text-gray-600' : 'font-medium text-pro-500'}`}>
                     {alerta.titulo}
                   </p>
                   {alerta.mensaje && <p className="text-[11px] text-gray-400 mt-0.5 truncate">{alerta.mensaje}</p>}
@@ -98,7 +98,7 @@ export default function PanelAlertas() {
                     {new Date(alerta.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
-                {!alerta.leida && <span className="w-2 h-2 rounded-full bg-[#085041] flex-shrink-0 mt-1.5" />}
+                {!alerta.leida && <span className="w-2 h-2 rounded-full bg-pro-500 flex-shrink-0 mt-1.5" />}
               </div>
             </button>
           ))}

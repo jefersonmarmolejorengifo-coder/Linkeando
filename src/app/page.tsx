@@ -81,27 +81,27 @@ export default function LandingPage() {
   const accent = esCliente ? '#1D9E75' : '#085041'
 
   return (
-    <div className="min-h-screen bg-[#f5f5f3] text-[#1a1a1a]">
+    <div className="min-h-screen bg-fondo text-[#1a1a1a]">
 
       {/* ── Nav ── */}
       <nav
-        className="fixed top-0 left-0 right-0 z-50 border-b border-[#e8e8e6] px-5 h-[52px] flex items-center justify-between"
+        className="fixed top-0 left-0 right-0 z-50 border-b border-borde px-5 h-[52px] flex items-center justify-between"
         style={{ background: 'rgba(255,255,255,0.94)', backdropFilter: 'blur(12px)' }}
       >
         <div className="flex items-center gap-2">
           <LogoNav />
-          <span className="text-lg font-medium text-[#1D9E75] tracking-tight">Linkeando</span>
+          <span className="text-lg font-medium text-verde-500 tracking-tight">Linkeando</span>
         </div>
         <div className="flex gap-2">
           <Link
             href="/auth/login"
-            className="px-3.5 py-1.5 border border-[#1D9E75] text-[#1D9E75] rounded-lg text-xs hover:bg-[#E1F5EE] transition-colors"
+            className="px-3.5 py-1.5 border border-verde-500 text-verde-500 rounded-lg text-xs hover:bg-verde-50 transition-colors"
           >
             Ingresar
           </Link>
           <Link
             href="/auth/registro"
-            className="px-3.5 py-1.5 bg-[#1D9E75] hover:bg-[#178a65] text-white rounded-lg text-xs font-medium transition-colors"
+            className="px-3.5 py-1.5 bg-verde-500 hover:bg-verde-600 text-white rounded-lg text-xs font-medium transition-colors"
           >
             Regístrate
           </Link>
@@ -114,13 +114,13 @@ export default function LandingPage() {
         style={{ background: accent }}
       >
         {/* Curva inferior */}
-        <div className="absolute bottom-0 left-0 right-0 h-7 bg-[#f5f5f3] rounded-t-[28px]" />
+        <div className="absolute bottom-0 left-0 right-0 h-7 bg-fondo rounded-t-[28px]" />
 
         <div className="flex justify-center"><LogoHero /></div>
         <h1 className="text-[38px] font-medium text-white tracking-tight leading-none mt-3.5">
           Linkeando
         </h1>
-        <p className="text-sm text-[#9FE1CB] mt-1.5 italic">
+        <p className="text-sm text-verde-200 mt-1.5 italic">
           El profesional correcto para tu necesidad
         </p>
         <p className="text-[13px] text-white/80 mt-3 leading-relaxed max-w-[300px] mx-auto min-h-[48px] transition-opacity duration-300">
@@ -137,7 +137,7 @@ export default function LandingPage() {
           <button
             onClick={() => setRol('cliente')}
             className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-[9px] text-[13px] transition-all ${
-              esCliente ? 'bg-white text-[#1D9E75] font-medium' : 'text-white/70 hover:text-white'
+              esCliente ? 'bg-white text-verde-500 font-medium' : 'text-white/70 hover:text-white'
             }`}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -163,7 +163,7 @@ export default function LandingPage() {
 
       {/* ── Buscador flotante ── */}
       <div className="mx-4 -mt-5 relative z-10">
-        <div className="bg-white rounded-xl border border-[#e8e8e6] px-3.5 py-3 flex items-center gap-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+        <div className="bg-white rounded-xl border border-borde px-3.5 py-3 flex items-center gap-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
@@ -188,11 +188,11 @@ export default function LandingPage() {
           <button
             onClick={() => setRol('cliente')}
             className={`rounded-xl border-[1.5px] p-4 text-center transition-all ${
-              esCliente ? 'border-[#1D9E75] bg-[#E1F5EE]' : 'border-[#e8e8e6] bg-white hover:border-gray-300'
+              esCliente ? 'border-verde-500 bg-verde-50' : 'border-borde bg-white hover:border-gray-300'
             }`}
           >
             <div className="text-[28px] mb-2">🏠</div>
-            <h4 className={`text-[13px] font-medium mb-1 ${esCliente ? 'text-[#085041]' : 'text-gray-900'}`}>
+            <h4 className={`text-[13px] font-medium mb-1 ${esCliente ? 'text-pro-500' : 'text-gray-900'}`}>
               Soy cliente
             </h4>
             <p className={`text-[11px] leading-snug ${esCliente ? 'text-[#0F6E56]' : 'text-gray-500'}`}>
@@ -202,7 +202,7 @@ export default function LandingPage() {
           <button
             onClick={() => setRol('profesional')}
             className={`rounded-xl border-[1.5px] p-4 text-center transition-all ${
-              !esCliente ? 'bg-[#E1F5EE]' : 'border-[#e8e8e6] bg-white hover:border-gray-300'
+              !esCliente ? 'bg-verde-50' : 'border-borde bg-white hover:border-gray-300'
             }`}
             style={!esCliente ? { borderColor: '#085041' } : {}}
           >
@@ -210,7 +210,7 @@ export default function LandingPage() {
             <h4 className={`text-[13px] font-medium mb-1 ${!esCliente ? 'text-[#04342C]' : 'text-gray-900'}`}>
               Soy profesional
             </h4>
-            <p className={`text-[11px] leading-snug ${!esCliente ? 'text-[#085041]' : 'text-gray-500'}`}>
+            <p className={`text-[11px] leading-snug ${!esCliente ? 'text-pro-500' : 'text-gray-500'}`}>
               Ofrezco mis servicios y quiero más clientes
             </p>
           </button>
@@ -221,7 +221,7 @@ export default function LandingPage() {
           <h3 className="text-sm font-medium mb-2.5">¿Cómo funciona para ti?</h3>
           <div className="flex flex-col gap-2">
             {(esCliente ? PASOS_CLIENTE : PASOS_PRO).map((paso) => (
-              <div key={paso.n} className="bg-white rounded-xl border border-[#e8e8e6] p-3.5 flex gap-3 items-start">
+              <div key={paso.n} className="bg-white rounded-xl border border-borde p-3.5 flex gap-3 items-start">
                 <div
                   className="w-[26px] h-[26px] rounded-full text-[12px] font-medium flex items-center justify-center flex-shrink-0 mt-0.5"
                   style={{ background: '#E1F5EE', color: accent }}
@@ -244,8 +244,8 @@ export default function LandingPage() {
           </h3>
           <div className="flex flex-col gap-2">
             {(esCliente ? BENEFICIOS_CLIENTE : BENEFICIOS_PRO).map((b) => (
-              <div key={b.title} className="bg-white rounded-xl border border-[#e8e8e6] p-3.5 flex items-start gap-2.5">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[15px] flex-shrink-0 bg-[#E1F5EE]">
+              <div key={b.title} className="bg-white rounded-xl border border-borde p-3.5 flex items-start gap-2.5">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[15px] flex-shrink-0 bg-verde-50">
                   {b.icon}
                 </div>
                 <div>
@@ -258,7 +258,7 @@ export default function LandingPage() {
         </div>
 
         {/* Mapa */}
-        <div className="bg-white rounded-xl border border-[#e8e8e6] overflow-hidden">
+        <div className="bg-white rounded-xl border border-borde overflow-hidden">
           <div className="px-3.5 py-3 border-b border-[#f0f0ee]">
             <h3 className="text-[13px] font-medium mb-0.5">
               {esCliente ? 'Profesionales cerca de ti ahora' : 'Solicitudes activas en tu zona'}
@@ -273,9 +273,9 @@ export default function LandingPage() {
         </div>
 
         {/* Banner */}
-        <div className="bg-[#E1F5EE] rounded-xl border border-[#9FE1CB] px-3.5 py-3 flex justify-between items-center">
+        <div className="bg-verde-50 rounded-xl border border-verde-200 px-3.5 py-3 flex justify-between items-center">
           <div>
-            <strong className="block text-[13px] font-medium text-[#085041] mb-0.5">
+            <strong className="block text-[13px] font-medium text-pro-500 mb-0.5">
               {esCliente ? 'Ferretería El Constructor' : 'Bancamía · Microcrédito'}
             </strong>
             <span className="text-[11px] text-[#0F6E56]">
@@ -284,7 +284,7 @@ export default function LandingPage() {
                 : 'Financia materiales y capital de trabajo'}
             </span>
           </div>
-          <span className="text-[9px] text-[#0F6E56] bg-[#9FE1CB] px-2 py-1 rounded font-medium whitespace-nowrap self-start">
+          <span className="text-[9px] text-[#0F6E56] bg-verde-200 px-2 py-1 rounded font-medium whitespace-nowrap self-start">
             Patrocinado
           </span>
         </div>
@@ -297,15 +297,15 @@ export default function LandingPage() {
           <h3 className="text-[16px] font-medium text-white mb-1.5 text-center">
             {esCliente ? 'Empieza gratis hoy' : 'Comienza a recibir clientes'}
           </h3>
-          <p className="text-[12px] text-[#9FE1CB] leading-relaxed mb-4 text-center">
+          <p className="text-[12px] text-verde-200 leading-relaxed mb-4 text-center">
             {esCliente
               ? 'Crear tu cuenta no cuesta nada. Encuentra el profesional correcto para lo que necesitas.'
               : 'Regístrate gratis, crea tu perfil y empieza a recibir solicitudes hoy mismo en tu zona.'}
           </p>
           <div className="flex flex-col gap-1.5 mb-4">
             {(esCliente ? FEATS_CLIENTE : FEATS_PRO).map((f) => (
-              <div key={f} className="text-[12px] text-[#E1F5EE] flex items-center gap-2">
-                <span className="text-[#9FE1CB] text-[10px] flex-shrink-0">✓</span>
+              <div key={f} className="text-[12px] text-verde-50 flex items-center gap-2">
+                <span className="text-verde-200 text-[10px] flex-shrink-0">✓</span>
                 {f}
               </div>
             ))}
@@ -331,7 +331,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── Footer ── */}
-      <footer className="text-center py-4 px-4 text-[11px] text-gray-400 border-t border-[#e8e8e6]">
+      <footer className="text-center py-4 px-4 text-[11px] text-gray-400 border-t border-borde">
         Linkeando · linkeando.app · El profesional correcto para tu necesidad
       </footer>
 

@@ -13,6 +13,7 @@ export default function PanelPerfil() {
   const [zonas, setZonas] = useState<ProZona[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const msgRef = useRef<HTMLDivElement>(null)
   const [msg, setMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
   const latRef = useRef<HTMLInputElement>(null)
   const lngRef = useRef<HTMLInputElement>(null)
@@ -67,6 +68,7 @@ export default function PanelPerfil() {
 
     setMsg({ type: 'ok', text: '¡Perfil actualizado correctamente!' })
     setSaving(false)
+    setTimeout(() => msgRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
   }
 
   function detectarUbi() {
@@ -85,9 +87,9 @@ export default function PanelPerfil() {
 
   return (
     <div className="px-4 pt-4 pb-6">
-      <div className="bg-[#085041] rounded-xl px-4 py-3 mb-4">
+      <div className="bg-pro-500 rounded-xl px-4 py-3 mb-4">
         <h1 className="text-[16px] font-medium text-white">Mi perfil profesional</h1>
-        <p className="text-[12px] text-[#9FE1CB]">Edita tu información para atraer más clientes</p>
+        <p className="text-[12px] text-verde-200">Edita tu información para atraer más clientes</p>
       </div>
 
       {/* Avatar */}
@@ -96,7 +98,7 @@ export default function PanelPerfil() {
       </div>
 
       {msg && (
-        <div className={`p-3 rounded-lg text-sm mb-4 ${msg.type === 'ok' ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+        <div ref={msgRef} className={`p-3 rounded-xl text-sm mb-4 ${msg.type === 'ok' ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
           {msg.text}
         </div>
       )}
@@ -104,38 +106,38 @@ export default function PanelPerfil() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Nombre completo</label>
-          <input name="nombre" type="text" required defaultValue={usuario?.nombre} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041]" />
+          <input name="nombre" type="text" required defaultValue={usuario?.nombre} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500" />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-          <input name="telefono" type="tel" defaultValue={usuario?.telefono ?? ''} placeholder="310 000 0000" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041]" />
+          <input name="telefono" type="tel" defaultValue={usuario?.telefono ?? ''} placeholder="310 000 0000" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500" />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Bio / Descripción</label>
-          <textarea name="bio" rows={3} defaultValue={perfil?.bio ?? usuario?.descripcion ?? ''} placeholder="Cuéntale a los clientes sobre tu experiencia..." className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041] resize-none" />
+          <textarea name="bio" rows={3} defaultValue={perfil?.bio ?? usuario?.descripcion ?? ''} placeholder="Cuéntale a los clientes sobre tu experiencia..." className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500 resize-none" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Años de experiencia</label>
-            <input name="anos_experiencia" type="number" min="0" max="50" defaultValue={perfil?.anos_experiencia ?? 0} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041]" />
+            <input name="anos_experiencia" type="number" min="0" max="50" defaultValue={perfil?.anos_experiencia ?? 0} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Radio de cobertura (km)</label>
-            <input name="radio_km" type="number" min="1" max="50" defaultValue={perfil?.radio_km ?? 10} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041]" />
+            <input name="radio_km" type="number" min="1" max="50" defaultValue={perfil?.radio_km ?? 10} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500" />
           </div>
         </div>
 
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Tarifa por hora (COP)</label>
-          <input name="tarifa" type="number" min="0" step="1000" defaultValue={usuario?.tarifa ?? ''} placeholder="35000" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041]" />
+          <input name="tarifa" type="number" min="0" step="1000" defaultValue={usuario?.tarifa ?? ''} placeholder="35000" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500" />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Barrio principal</label>
-          <select name="barrio" defaultValue={usuario?.barrio ?? ''} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041]">
+          <select name="barrio" defaultValue={usuario?.barrio ?? ''} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500">
             <option value="">Selecciona tu barrio</option>
             {BARRIOS_CALI.map(({ zona, barrios }) => (
               <optgroup key={zona} label={`── ${zona}`}>
@@ -147,7 +149,7 @@ export default function PanelPerfil() {
 
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Descripción para clientes</label>
-          <textarea name="descripcion" rows={3} defaultValue={usuario?.descripcion ?? ''} placeholder="Cuéntale a los clientes sobre tu experiencia, herramientas..." className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#085041]/20 focus:border-[#085041] resize-none" />
+          <textarea name="descripcion" rows={3} defaultValue={usuario?.descripcion ?? ''} placeholder="Cuéntale a los clientes sobre tu experiencia, herramientas..." className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pro-500/20 focus:border-pro-500 resize-none" />
         </div>
 
         {/* Ubicación */}
@@ -155,7 +157,7 @@ export default function PanelPerfil() {
           <label className="block text-xs font-medium text-gray-500 mb-1">Ubicación en el mapa</label>
           <input ref={latRef} type="hidden" name="lat" defaultValue={usuario?.lat ?? perfil?.lat_base ?? ''} />
           <input ref={lngRef} type="hidden" name="lng" defaultValue={usuario?.lng ?? perfil?.lng_base ?? ''} />
-          <button type="button" onClick={detectarUbi} className="inline-flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 hover:border-[#085041] hover:text-[#085041] transition-colors">
+          <button type="button" onClick={detectarUbi} className="inline-flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 hover:border-pro-500 hover:text-pro-500 transition-colors">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
             Usar mi ubicación actual
           </button>
@@ -168,14 +170,14 @@ export default function PanelPerfil() {
             {especialidades.length > 0 ? especialidades.map((e) => {
               const cat = CATEGORIAS.find(c => c.key === e.categoria)
               return (
-                <span key={e.id} className={`text-[12px] px-3 py-1.5 rounded-full border ${e.es_principal ? 'bg-[#085041] text-white border-[#085041]' : 'bg-[#E1F5EE] text-[#085041] border-[#9FE1CB]'}`}>
+                <span key={e.id} className={`text-[12px] px-3 py-1.5 rounded-full border ${e.es_principal ? 'bg-pro-500 text-white border-pro-500' : 'bg-verde-50 text-pro-500 border-verde-200'}`}>
                   {cat ? `${cat.icon} ${cat.label}` : e.categoria}
                   {e.es_principal && ' ★'}
                 </span>
               )
             }) : <span className="text-[12px] text-gray-400">Sin especialidades</span>}
           </div>
-          <a href="/panel/especialidades" className="text-xs text-[#085041] underline">Gestionar especialidades →</a>
+          <a href="/panel/especialidades" className="text-xs text-pro-500 underline">Gestionar especialidades →</a>
         </div>
 
         {/* Zonas (solo lectura, lista) */}
@@ -190,7 +192,7 @@ export default function PanelPerfil() {
           </div>
         </div>
 
-        <button type="submit" disabled={saving} className="w-full bg-[#085041] hover:bg-[#04342C] disabled:opacity-60 text-white py-2.5 rounded-xl font-semibold transition-colors">
+        <button type="submit" disabled={saving} className="w-full bg-pro-500 hover:bg-pro-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-medium transition-colors">
           {saving ? 'Guardando…' : 'Guardar cambios'}
         </button>
       </form>

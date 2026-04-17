@@ -5,9 +5,7 @@ import Link from 'next/link'
 import { registro } from '@/app/actions/auth'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
-import { CATEGORIAS, BARRIOS_CALI } from '@/lib/constants'
-
-// BARRIOS_CALI y CATEGORIAS importados de @/lib/constants
+import { CATEGORIAS, BARRIOS_CALI, STRENGTH_COLORS, STRENGTH_LABELS } from '@/lib/constants'
 
 const EyeIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -28,8 +26,6 @@ const ChevronIcon = () => (
   </svg>
 )
 
-const STRENGTH_COLORS = ['#F09595', '#EF9F27', '#97C459', '#1D9E75']
-const STRENGTH_LABELS = ['Muy débil', 'Débil', 'Buena', 'Fuerte']
 
 function calcStrength(v: string): number {
   let s = 0
@@ -52,11 +48,11 @@ export default function RegistroPage() {
   const strength = calcStrength(password)
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-gray-50 py-8 px-4">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-fondo py-8 px-4">
       <div className="w-full max-w-sm rounded-2xl overflow-hidden shadow-md border border-gray-100">
 
         {/* ── Hero ── */}
-        <div className="bg-[#1D9E75] px-6 pt-8 pb-5 text-center">
+        <div className="bg-verde-500 px-6 pt-8 pb-5 text-center">
           <svg className="mx-auto mb-2.5" width="44" height="44" viewBox="0 0 64 64" fill="none">
             <circle cx="32" cy="24" r="16" fill="#fff" opacity="0.95"/>
             <circle cx="32" cy="24" r="9" fill="#1D9E75"/>
@@ -65,7 +61,7 @@ export default function RegistroPage() {
             <path d="M32 40 L24 30 Q32 33 40 30 Z" fill="#fff" opacity="0.95"/>
           </svg>
           <p className="text-xl font-medium text-white">Crear cuenta</p>
-          <p className="text-xs text-[#9FE1CB] mt-1">Únete a Linkeando en Cali</p>
+          <p className="text-xs text-verde-200 mt-1">Únete a Linkeando en Cali</p>
         </div>
 
         {/* ── Formulario ── */}
@@ -94,12 +90,12 @@ export default function RegistroPage() {
                     onClick={() => setRol(r.value as 'cliente' | 'profesional')}
                     className={`rounded-xl border-2 p-3.5 text-center transition-all ${
                       rol === r.value
-                        ? 'border-[#1D9E75] bg-[#E1F5EE]'
+                        ? 'border-verde-500 bg-verde-50'
                         : 'border-gray-100 hover:border-gray-200'
                     }`}
                   >
                     <div className="text-2xl mb-1.5">{r.icon}</div>
-                    <p className={`text-xs font-semibold ${rol === r.value ? 'text-[#085041]' : 'text-gray-700'}`}>
+                    <p className={`text-xs font-semibold ${rol === r.value ? 'text-pro-500' : 'text-gray-700'}`}>
                       {r.label}
                     </p>
                     <p className={`text-[11px] mt-0.5 leading-tight ${rol === r.value ? 'text-[#0F6E56]' : 'text-gray-400'}`}>
@@ -119,7 +115,7 @@ export default function RegistroPage() {
                   type="text"
                   required
                   placeholder="Tu nombre"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors"
                 />
               </div>
               <div>
@@ -129,7 +125,7 @@ export default function RegistroPage() {
                   type="text"
                   required
                   placeholder="Tu apellido"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors"
                 />
               </div>
             </div>
@@ -143,7 +139,7 @@ export default function RegistroPage() {
                 required
                 autoComplete="email"
                 placeholder="tucorreo@email.com"
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors"
+                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors"
               />
             </div>
 
@@ -154,7 +150,7 @@ export default function RegistroPage() {
                 name="telefono"
                 type="tel"
                 placeholder="300 000 0000"
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors"
+                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors"
               />
             </div>
 
@@ -167,7 +163,7 @@ export default function RegistroPage() {
                     <select
                       name="categoria"
                       defaultValue=""
-                      className="w-full appearance-none border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors bg-white"
+                      className="w-full appearance-none border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors bg-white"
                     >
                       <option value="" disabled>Selecciona tu oficio…</option>
                       {CATEGORIAS.map((c) => (
@@ -186,7 +182,7 @@ export default function RegistroPage() {
                     <select
                       name="barrio"
                       defaultValue=""
-                      className="w-full appearance-none border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors bg-white"
+                      className="w-full appearance-none border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors bg-white"
                     >
                       <option value="" disabled>Selecciona tu zona…</option>
                       {BARRIOS_CALI.map(({ zona, barrios }) => (
@@ -216,7 +212,7 @@ export default function RegistroPage() {
                   placeholder="Mínimo 8 caracteres"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors"
                 />
                 <button
                   type="button"
@@ -253,12 +249,12 @@ export default function RegistroPage() {
                 id="terms"
                 checked={terms}
                 onChange={(e) => setTerms(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded accent-[#1D9E75] flex-shrink-0 cursor-pointer"
+                className="mt-0.5 w-4 h-4 rounded accent-verde-500 flex-shrink-0 cursor-pointer"
               />
               <label htmlFor="terms" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
                 Acepto los{' '}
-                <span className="text-[#1D9E75]">Términos de uso</span> y la{' '}
-                <span className="text-[#1D9E75]">Política de privacidad</span> de Linkeando,
+                <span className="text-verde-500">Términos de uso</span> y la{' '}
+                <span className="text-verde-500">Política de privacidad</span> de Linkeando,
                 incluyendo el tratamiento de mis datos según la Ley 1581 de 2012.
               </label>
             </div>
@@ -266,7 +262,7 @@ export default function RegistroPage() {
             <button
               type="submit"
               disabled={!terms}
-              className="w-full bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] text-white py-3 rounded-xl text-sm font-medium transition-all"
+              className="w-full bg-verde-500 hover:bg-verde-600 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] text-white py-3 rounded-xl text-sm font-medium transition-all"
             >
               Crear mi cuenta
             </button>
@@ -300,7 +296,7 @@ export default function RegistroPage() {
 
           <p className="text-center text-xs text-gray-400 mt-4">
             ¿Ya tienes cuenta?{' '}
-            <Link href="/auth/login" className="text-[#1D9E75] font-medium hover:underline">
+            <Link href="/auth/login" className="text-verde-500 font-medium hover:underline">
               Inicia sesión
             </Link>
           </p>

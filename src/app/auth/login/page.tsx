@@ -50,14 +50,14 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false)
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-gray-50 py-8 px-4">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-fondo py-8 px-4">
       <div className="w-full max-w-sm rounded-2xl overflow-hidden shadow-md border border-gray-100">
 
         {/* ── Hero verde ── */}
-        <div className="bg-[#1D9E75] px-6 pt-10 pb-0 text-center">
+        <div className="bg-verde-500 px-6 pt-10 pb-0 text-center">
           <div className="flex justify-center mb-3"><LogoIcon /></div>
           <p className="text-2xl font-medium text-white tracking-tight">Linkeando</p>
-          <p className="text-xs text-[#9FE1CB] mt-1 mb-5">El oficio correcto, cerca de ti</p>
+          <p className="text-xs text-verde-200 mt-1 mb-5">El oficio correcto, cerca de ti</p>
 
           {/* Tabs rol */}
           <div className="flex gap-0 bg-white/15 rounded-xl p-1 mx-2 mb-0">
@@ -68,8 +68,8 @@ export default function LoginPage() {
                 onClick={() => setRol(r)}
                 className={`flex-1 py-2 text-sm rounded-lg transition-all ${
                   rol === r
-                    ? 'bg-white text-[#1D9E75] font-medium shadow-sm'
-                    : 'text-[#9FE1CB] hover:text-white'
+                    ? 'bg-white text-verde-500 font-medium shadow-sm'
+                    : 'text-verde-200 hover:text-white'
                 }`}
               >
                 {r === 'cliente' ? 'Soy cliente' : 'Soy profesional'}
@@ -106,7 +106,7 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 placeholder="tucorreo@email.com"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors"
               />
             </div>
 
@@ -121,7 +121,7 @@ export default function LoginPage() {
                   required
                   autoComplete="current-password"
                   placeholder="Tu contraseña"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75] transition-colors"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500/20 focus:border-verde-500 transition-colors"
                 />
                 <button
                   type="button"
@@ -135,7 +135,7 @@ export default function LoginPage() {
               <div className="text-right mt-1.5">
                 <Link
                   href="/auth/recuperar"
-                  className="text-xs text-[#1D9E75] hover:underline"
+                  className="text-xs text-verde-500 hover:underline"
                 >
                   ¿Olvidaste tu contraseña?
                 </Link>
@@ -144,7 +144,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#1D9E75] hover:bg-[#178a65] active:scale-[0.99] text-white py-3 rounded-xl text-sm font-medium transition-all mt-1"
+              className="w-full bg-verde-500 hover:bg-verde-600 active:scale-[0.99] text-white py-3 rounded-xl text-sm font-medium transition-all mt-1"
             >
               Ingresar
             </button>
@@ -165,7 +165,7 @@ export default function LoginPage() {
                 options: { redirectTo: `${window.location.origin}/auth/callback` },
               })
             }}
-            className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 text-sm text-gray-600 hover:bg-fondo transition-colors"
           >
             <GoogleIcon />
             Continuar con Google
@@ -173,7 +173,7 @@ export default function LoginPage() {
 
           <p className="text-center text-xs text-gray-400 mt-5">
             ¿No tienes cuenta?{' '}
-            <Link href="/auth/registro" className="text-[#1D9E75] font-medium hover:underline">
+            <Link href="/auth/registro" className="text-verde-500 font-medium hover:underline">
               Regístrate gratis
             </Link>
           </p>

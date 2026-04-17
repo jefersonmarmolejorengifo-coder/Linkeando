@@ -41,7 +41,7 @@ export default function PanelPremium() {
 
   return (
     <div className="px-4 pt-4">
-      <div className="bg-gradient-to-br from-[#EF9F27] to-[#D88819] rounded-xl px-4 py-4 mb-4 text-center">
+      <div className="bg-gradient-to-br from-[#EF9F27] to-premium-600 rounded-xl px-4 py-4 mb-4 text-center">
         <div className="text-3xl mb-1">★</div>
         <h1 className="text-[18px] font-bold text-white">Linkeando Premium</h1>
         <p className="text-[12px] text-white/80 mt-1">Destaca tu perfil y consigue más clientes</p>
@@ -49,9 +49,9 @@ export default function PanelPremium() {
 
       {/* Estado actual */}
       {suscripcion && (
-        <div className="bg-[#FAEEDA] rounded-xl border border-[#FAC775] p-3 mb-4">
+        <div className="bg-premium-100 rounded-xl border border-premium-300 p-3 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-[#EF9F27] text-lg">★</span>
+            <span className="text-premium-500 text-lg">★</span>
             <div>
               <p className="text-[13px] font-medium text-[#412402]">Premium activo — Plan {suscripcion.plan}</p>
               <p className="text-[11px] text-[#854F0B]">
@@ -63,12 +63,12 @@ export default function PanelPremium() {
       )}
 
       {/* Beneficios */}
-      <div className="bg-white rounded-xl border border-[#e8e8e6] p-4 mb-4">
+      <div className="bg-white rounded-xl border border-borde p-4 mb-4">
         <h2 className="text-[13px] font-medium mb-3">Beneficios Premium</h2>
         <div className="space-y-2.5">
           {BENEFICIOS.map((b, i) => (
             <div key={i} className="flex items-start gap-2">
-              <span className="text-[#EF9F27] text-sm mt-0.5">✓</span>
+              <span className="text-premium-500 text-sm mt-0.5">✓</span>
               <span className="text-[12px] text-gray-600">{b}</span>
             </div>
           ))}
@@ -81,7 +81,7 @@ export default function PanelPremium() {
           <button
             key={plan.key}
             onClick={() => setSelected(plan.key)}
-            className={`w-full rounded-xl border-2 p-3 text-left transition-all ${selected === plan.key ? 'border-[#EF9F27] bg-[#FAEEDA]' : 'border-[#e8e8e6] bg-white'}`}
+            className={`w-full rounded-xl border-2 p-3 text-left transition-all ${selected === plan.key ? 'border-premium-500 bg-premium-100' : 'border-borde bg-white'}`}
           >
             <div className="flex justify-between items-center">
               <div>
@@ -98,8 +98,8 @@ export default function PanelPremium() {
                     Ahorras {plan.ahorro}
                   </span>
                 )}
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected === plan.key ? 'border-[#EF9F27]' : 'border-gray-300'}`}>
-                  {selected === plan.key && <div className="w-3 h-3 rounded-full bg-[#EF9F27]" />}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected === plan.key ? 'border-premium-500' : 'border-gray-300'}`}>
+                  {selected === plan.key && <div className="w-3 h-3 rounded-full bg-premium-500" />}
                 </div>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function PanelPremium() {
         href={PLANES_PREMIUM.find(p => p.key === selected)?.url ?? '#'}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full bg-[#EF9F27] hover:bg-[#D88819] text-white py-3 rounded-xl text-[14px] font-medium text-center transition-colors"
+        className="block w-full bg-premium-500 hover:bg-[#D88819] text-white py-3 rounded-xl text-[14px] font-medium text-center transition-colors"
       >
         {suscripcion ? 'Cambiar plan Premium' : 'Activar Premium ahora'}
       </a>

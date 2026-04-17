@@ -44,29 +44,36 @@ export default function CalificarProPage() {
       comentario: calData.comentario as string | null,
     })
 
-    // Redirigir después de un momento
-    setTimeout(() => router.push('/mis-solicitudes'), 2000)
   }
 
   if (loading) return (
-    <div className="min-h-screen bg-[#f5f5f3] flex items-center justify-center">
+    <div className="min-h-screen bg-fondo flex items-center justify-center">
       <div className="w-8 h-8 border-3 border-verde-500 border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-[#f5f5f3] flex justify-center">
+    <div className="min-h-screen bg-fondo flex justify-center">
       <div className="w-full max-w-sm bg-white min-h-screen">
-        <div className="bg-[#1D9E75] px-6 pt-8 pb-6 text-center">
+        <div className="bg-verde-500 px-6 pt-8 pb-6 text-center relative">
+          <a href="/mis-solicitudes" className="absolute top-4 left-4 text-white/70 hover:text-white transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </a>
           <div className="text-3xl mb-2">⭐</div>
           <h1 className="text-[18px] font-medium text-white">Califica al profesional</h1>
           {profesional && (
-            <p className="text-[13px] text-[#9FE1CB] mt-1">{profesional.nombre}</p>
+            <p className="text-[13px] text-verde-200 mt-1">{profesional.nombre}</p>
           )}
         </div>
 
         <div className="px-6 py-6">
           <FormCalificar3D tipo="profesional" onSubmit={handleSubmit} />
+          <button
+            onClick={() => router.push('/mis-solicitudes')}
+            className="w-full mt-4 text-sm text-verde-500 hover:text-verde-600 font-medium py-2 transition-colors"
+          >
+            Volver a mis solicitudes
+          </button>
         </div>
       </div>
     </div>

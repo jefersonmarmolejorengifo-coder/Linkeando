@@ -40,7 +40,7 @@ function GeoButton({
         type="button"
         onClick={obtener}
         disabled={estado === 'loading'}
-        className="inline-flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 hover:border-verde-400 hover:text-verde-700 transition-colors disabled:opacity-50"
+        className="inline-flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-600 hover:border-verde-400 hover:text-verde-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -69,7 +69,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-verde-500 hover:bg-verde-600 disabled:opacity-60 text-white py-2.5 rounded-xl font-semibold transition-colors"
+      className="w-full bg-verde-500 hover:bg-verde-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-medium transition-colors"
     >
       {pending ? 'Guardando…' : 'Guardar cambios'}
     </button>
@@ -106,7 +106,7 @@ export default function FormPerfil({ usuario }: { usuario: Usuario }) {
           type="text"
           required
           defaultValue={usuario.nombre}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
         />
       </div>
 
@@ -119,7 +119,7 @@ export default function FormPerfil({ usuario }: { usuario: Usuario }) {
           name="telefono"
           type="tel"
           defaultValue={usuario.telefono ?? ''}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
           placeholder="310 000 0000"
         />
       </div>
@@ -132,7 +132,7 @@ export default function FormPerfil({ usuario }: { usuario: Usuario }) {
         <select
           name="barrio"
           defaultValue={usuario.barrio ?? ''}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
         >
           <option value="">Selecciona tu barrio</option>
           {BARRIOS_CALI.map(({ zona, barrios }) => (
@@ -176,7 +176,7 @@ export default function FormPerfil({ usuario }: { usuario: Usuario }) {
                 min="0"
                 step="1000"
                 defaultValue={usuario.tarifa ?? ''}
-                className="w-full border border-gray-200 rounded-lg pl-7 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+                className="w-full border border-gray-200 rounded-xl pl-7 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
                 placeholder="35000"
               />
             </div>
@@ -192,7 +192,7 @@ export default function FormPerfil({ usuario }: { usuario: Usuario }) {
               name="descripcion"
               rows={4}
               defaultValue={usuario.descripcion ?? ''}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500 resize-none"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500 resize-none"
               placeholder="Cuéntale a los clientes sobre tu experiencia, años de trabajo, herramientas que usas…"
             />
           </div>

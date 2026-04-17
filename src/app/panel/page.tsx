@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
-import { CATEGORIAS } from '@/lib/constants'
+import { CATEGORIAS, CATEGORIA_COLORS } from '@/lib/constants'
 import type { Usuario, Profesional, Solicitud, ProEspecialidad } from '@/types'
 
 const MESES = ['Sep', 'Oct', 'Nov', 'Dic', 'Ene', 'Feb', 'Mar']
@@ -16,10 +16,9 @@ function initials(nombre: string) {
 }
 
 function avatarColor(id: string) {
-  const palette = ['#1D9E75', '#185FA5', '#7C3AED', '#B45309', '#0F766E', '#CA8A04', '#D85A30']
   let h = 0
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % palette.length
-  return palette[h]
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % CATEGORIA_COLORS.length
+  return CATEGORIA_COLORS[h]
 }
 
 export default function PanelDashboard() {
@@ -70,11 +69,11 @@ export default function PanelDashboard() {
   return (
     <>
       {/* Header oscuro */}
-      <div className="bg-[#085041]">
+      <div className="bg-pro-500">
         <div className="px-4 pt-3 pb-2 flex items-center justify-between">
           <h2 className="text-[15px] font-medium text-white">Panel profesional</h2>
           {perfil?.es_premium && (
-            <span className="text-[11px] text-white/80 bg-[#EF9F27] px-2.5 py-1 rounded-lg font-medium">★ Premium</span>
+            <span className="text-[11px] text-white/80 bg-premium-500 px-2.5 py-1 rounded-lg font-medium">★ Premium</span>
           )}
         </div>
 
@@ -93,23 +92,23 @@ export default function PanelDashboard() {
             </div>
             <div className="flex-1">
               <div className="text-[16px] font-medium text-white">{usuario?.nombre ?? '…'}</div>
-              <div className="text-[12px] text-[#5DCAA5] mt-0.5">
+              <div className="text-[12px] text-verde-300 mt-0.5">
                 {espLabels.length > 0 ? espLabels.join(' · ') : usuario?.categoria ?? ''}
                 {usuario?.barrio ? ` · ${usuario.barrio}` : ''}
               </div>
-              <button onClick={handleToggleDisponible} className="inline-flex items-center gap-1.5 mt-1.5 text-[11px] text-[#E1F5EE]">
-                <span className={`w-2 h-2 rounded-full ${disponible ? 'bg-[#9FE1CB]' : 'bg-[#F5C4B3]'}`} />
+              <button onClick={handleToggleDisponible} className="inline-flex items-center gap-1.5 mt-1.5 text-[11px] text-verde-50">
+                <span className={`w-2 h-2 rounded-full ${disponible ? 'bg-verde-200' : 'bg-urgente-200'}`} />
                 {disponible ? 'Disponible' : 'No disponible'}
               </button>
             </div>
           </div>
 
           {/* Toggle barra */}
-          <div className="bg-[#04342C] rounded-xl px-3.5 py-2.5 flex items-center justify-between mt-3">
-            <span className="text-[13px] text-[#E1F5EE]">Disponible para trabajos</span>
+          <div className="bg-pro-700 rounded-xl px-3.5 py-2.5 flex items-center justify-between mt-3">
+            <span className="text-[13px] text-verde-50">Disponible para trabajos</span>
             <button
               onClick={handleToggleDisponible}
-              className={`w-10 h-[22px] rounded-full relative transition-colors flex-shrink-0 ${disponible ? 'bg-[#9FE1CB]' : 'bg-gray-500'}`}
+              className={`w-10 h-[22px] rounded-full relative transition-colors flex-shrink-0 ${disponible ? 'bg-verde-200' : 'bg-gray-500'}`}
             >
               <span className={`absolute top-[2px] w-[18px] h-[18px] bg-white rounded-full transition-all ${disponible ? 'left-[20px]' : 'left-[2px]'}`} />
             </button>
@@ -122,13 +121,13 @@ export default function PanelDashboard() {
         {/* Métricas */}
         <div className="grid grid-cols-2 gap-2">
           {[
-            { n: `${usuario?.total_servicios ?? 0}`, l: 'Servicios realizados', d: '↑ este mes', dc: 'text-[#1D9E75]' },
-            { n: usuario?.rating_promedio ? usuario.rating_promedio.toFixed(1) : '–', l: 'Calificación', d: usuario?.rating_promedio && usuario.rating_promedio >= 4 ? '↑ Excelente' : '', dc: 'text-[#1D9E75]' },
-            { n: `${perfil?.total_incidencias ?? 0}`, l: 'Incidencias', d: perfil?.total_incidencias === 0 ? '✓ Sin incidencias' : '', dc: perfil?.total_incidencias === 0 ? 'text-[#1D9E75]' : 'text-[#D85A30]' },
-            { n: `${perfil?.radio_km ?? 10} km`, l: 'Radio cobertura', d: `${especialidades.length} especialidad${especialidades.length !== 1 ? 'es' : ''}`, dc: 'text-[#085041]' },
+            { n: `${usuario?.total_servicios ?? 0}`, l: 'Servicios realizados', d: '↑ este mes', dc: 'text-verde-500' },
+            { n: usuario?.rating_promedio ? usuario.rating_promedio.toFixed(1) : '–', l: 'Calificación', d: usuario?.rating_promedio && usuario.rating_promedio >= 4 ? '↑ Excelente' : '', dc: 'text-verde-500' },
+            { n: `${perfil?.total_incidencias ?? 0}`, l: 'Incidencias', d: perfil?.total_incidencias === 0 ? '✓ Sin incidencias' : '', dc: perfil?.total_incidencias === 0 ? 'text-verde-500' : 'text-urgente-500' },
+            { n: `${perfil?.radio_km ?? 10} km`, l: 'Radio cobertura', d: `${especialidades.length} especialidad${especialidades.length !== 1 ? 'es' : ''}`, dc: 'text-pro-500' },
           ].map((m) => (
-            <div key={m.l} className="bg-white rounded-xl border border-[#e8e8e6] p-3">
-              <div className="text-[20px] font-medium text-[#085041]">{m.n}</div>
+            <div key={m.l} className="bg-white rounded-xl border border-borde p-3">
+              <div className="text-[20px] font-medium text-pro-500">{m.n}</div>
               <div className="text-[10px] text-gray-400 mt-0.5">{m.l}</div>
               {m.d && <div className={`text-[10px] mt-0.5 ${m.dc}`}>{m.d}</div>}
             </div>
@@ -136,20 +135,20 @@ export default function PanelDashboard() {
         </div>
 
         {/* Gráfica de ingresos */}
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-3">
+        <div className="bg-white rounded-xl border border-borde p-3">
           <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-3">Ingresos · últimos 7 meses</div>
           <div className="flex items-end gap-1.5 h-14">
             {INGRESOS_DEMO.map((val, i) => (
               <div key={i} className="flex-1 flex flex-col items-center justify-end gap-0.5">
                 <div
-                  className={`w-full rounded-t-[3px] ${i === 6 ? 'bg-[#085041]' : 'bg-[#E1F5EE]'}`}
+                  className={`w-full rounded-t-[3px] ${i === 6 ? 'bg-pro-500' : 'bg-verde-50'}`}
                   style={{ height: Math.round(val / MAX_ING * 52) }}
                 />
                 <span className="text-[8px] text-gray-400">{MESES[i]}</span>
               </div>
             ))}
           </div>
-          <div className="bg-[#f5f5f3] rounded-lg px-3 py-2.5 mt-3">
+          <div className="bg-fondo rounded-lg px-3 py-2.5 mt-3">
             <div className="text-[11px] text-gray-400">Sin comisiones · tus ingresos son tuyos</div>
           </div>
         </div>
@@ -158,35 +157,35 @@ export default function PanelDashboard() {
         <div>
           <div className="flex justify-between items-center mb-2.5">
             <h3 className="text-sm font-medium">{solicitudes.length > 0 ? 'Solicitudes recientes' : 'Solicitudes disponibles'}</h3>
-            <button onClick={() => router.push('/panel/solicitudes')} className="text-xs text-[#085041]">Ver todas →</button>
+            <button onClick={() => router.push('/panel/solicitudes')} className="text-xs text-pro-500">Ver todas →</button>
           </div>
           {solicitudes.length === 0 ? (
-            <div className="bg-white rounded-xl border border-[#e8e8e6] p-4 text-center text-sm text-gray-400">
+            <div className="bg-white rounded-xl border border-borde p-4 text-center text-sm text-gray-400">
               No hay solicitudes en tu zona por ahora.
             </div>
           ) : solicitudes.slice(0, 2).map((sol) => {
             const catInfo = CATEGORIAS.find(c => c.key === sol.categoria)
             return (
-              <div key={sol.id} className="bg-white rounded-xl border border-[#e8e8e6] p-3 mb-2">
+              <div key={sol.id} className="bg-white rounded-xl border border-borde p-3 mb-2">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="text-[14px] font-medium flex-1 mr-2">{sol.titulo}</h3>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#E1F5EE] text-[#085041] border border-[#9FE1CB] flex-shrink-0">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-verde-50 text-pro-500 border border-verde-200 flex-shrink-0">
                     {catInfo ? catInfo.icon : ''} {catInfo?.label ?? sol.categoria}
                   </span>
                 </div>
                 {sol.sid && (
-                  <div className="text-[10px] font-mono bg-[#f5f5f3] text-gray-400 px-2 py-1 rounded border border-[#e8e8e6] inline-block mb-2">
+                  <div className="text-[10px] font-mono bg-fondo text-gray-400 px-2 py-1 rounded border border-borde inline-block mb-2">
                     ID: {sol.sid}
                   </div>
                 )}
                 <div className="text-[12px] text-gray-500 mb-2.5">
                   {sol.barrio ? `📍 ${sol.barrio}` : '📍 Cali'}
                   {sol.presupuesto_max ? ` · 💰 Hasta $${(sol.presupuesto_max / 1000).toFixed(0)}k` : ''}
-                  {sol.urgente && <span className="ml-1 text-[#D85A30] font-medium">🚨 Urgente</span>}
+                  {sol.urgente && <span className="ml-1 text-urgente-500 font-medium">🚨 Urgente</span>}
                 </div>
                 <button
                   onClick={() => router.push(`/solicitudes/${sol.id}`)}
-                  className="w-full bg-[#085041] hover:bg-[#04342C] text-white py-2 rounded-lg text-[12px] font-medium transition-colors"
+                  className="w-full bg-pro-500 hover:bg-pro-700 text-white py-2 rounded-lg text-[12px] font-medium transition-colors"
                 >
                   Ver y postular
                 </button>
@@ -195,30 +194,44 @@ export default function PanelDashboard() {
           })}
         </div>
 
+        {/* Accesos rápidos */}
+        <div className="grid grid-cols-2 gap-2">
+          <button onClick={() => router.push('/panel/resultados')} className="bg-white rounded-xl border border-borde p-3 text-left hover:border-pro-500 transition-colors">
+            <div className="text-lg mb-1">⭐</div>
+            <p className="text-[12px] font-medium text-pro-500">Mis calificaciones</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">Ver historial y promedios</p>
+          </button>
+          <button onClick={() => router.push('/panel/alertas')} className="bg-white rounded-xl border border-borde p-3 text-left hover:border-pro-500 transition-colors">
+            <div className="text-lg mb-1">🔔</div>
+            <p className="text-[12px] font-medium text-pro-500">Alertas</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">Notificaciones de trabajo</p>
+          </button>
+        </div>
+
         {/* Especialidades */}
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-3">
+        <div className="bg-white rounded-xl border border-borde p-3">
           <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-2.5">Mis especialidades</div>
           <div className="flex gap-2 flex-wrap">
             {espLabels.length > 0 ? espLabels.map((label, i) => (
-              <span key={i} className="text-[12px] px-3 py-1.5 rounded-full bg-[#E1F5EE] text-[#085041] border border-[#9FE1CB]">
+              <span key={i} className="text-[12px] px-3 py-1.5 rounded-full bg-verde-50 text-pro-500 border border-verde-200">
                 {label}
               </span>
             )) : (
               <span className="text-[12px] text-gray-400">Sin especialidad configurada</span>
             )}
           </div>
-          <button onClick={() => router.push('/panel/especialidades')} className="mt-3 w-full py-2 text-[12px] text-[#085041] border border-[#085041] rounded-lg hover:bg-[#E1F5EE] transition-colors">
+          <button onClick={() => router.push('/panel/especialidades')} className="mt-3 w-full py-2 text-[12px] text-pro-500 border border-pro-500 rounded-lg hover:bg-verde-50 transition-colors">
             Editar especialidades
           </button>
         </div>
 
         {/* Banner */}
-        <div className="bg-[#FAEEDA] rounded-xl border border-[#FAC775] px-3.5 py-2.5 flex justify-between items-center">
+        <div className="bg-premium-100 rounded-xl border border-premium-300 px-3.5 py-2.5 flex justify-between items-center">
           <div>
             <strong className="block text-[13px] font-medium text-[#412402]">Bancamía · Microcrédito</strong>
             <span className="text-[11px] text-[#854F0B]">Financia materiales y capital de trabajo</span>
           </div>
-          <span className="text-[9px] text-[#412402] bg-[#FAC775] px-2 py-1 rounded font-medium self-start">Patrocinado</span>
+          <span className="text-[9px] text-[#412402] bg-premium-300 px-2 py-1 rounded font-medium self-start">Patrocinado</span>
         </div>
 
         <div className="h-4" />

@@ -12,7 +12,7 @@ function SubmitButton({ disabled }: { disabled?: boolean }) {
     <button
       type="submit"
       disabled={pending || disabled}
-      className="w-full bg-verde-500 hover:bg-verde-600 disabled:opacity-60 text-white py-3 rounded-xl font-semibold transition-colors"
+      className="w-full bg-verde-500 hover:bg-verde-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-medium transition-colors"
     >
       {pending ? 'Publicando…' : 'Publicar solicitud'}
     </button>

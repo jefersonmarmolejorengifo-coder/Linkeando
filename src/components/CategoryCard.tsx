@@ -13,7 +13,7 @@ export default function CategoriaCard({ category }: CategoriaCardProps) {
   return (
     <Link
       href={`/servicios?categoria=${category}`}
-      className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all group"
+      className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-verde-200 transition-all group"
     >
       <span className="text-3xl group-hover:scale-110 transition-transform">
         {CATEGORY_ICONS[category] ?? '🛠️'}

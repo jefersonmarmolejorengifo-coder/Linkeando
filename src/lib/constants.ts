@@ -46,6 +46,16 @@ export const BARRIOS_CALI = [
   },
 ]
 
+// ─── Colores para avatares por categoría ──────────────────────
+export const CATEGORIA_COLORS = [
+  '#1D9E75', '#185FA5', '#7C3AED', '#B45309',
+  '#0F766E', '#CA8A04', '#D85A30',
+] as const
+
+// ─── Password strength ───────────────────────────────────────
+export const STRENGTH_COLORS = ['#F09595', '#EF9F27', '#97C459', '#1D9E75'] as const
+export const STRENGTH_LABELS = ['Muy débil', 'Débil', 'Buena', 'Fuerte'] as const
+
 // ─── Colores de marca ─────────────────────────────────────────
 export const COLORS = {
   cliente: '#1D9E75',

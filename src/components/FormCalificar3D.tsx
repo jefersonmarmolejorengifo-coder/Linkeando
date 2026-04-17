@@ -17,7 +17,7 @@ function StarRow({ label, value, onChange }: { label: string; value: number; onC
             onClick={() => onChange(star)}
             className="text-xl transition-transform hover:scale-110"
           >
-            <span className={star <= (hover || value) ? 'text-[#EF9F27]' : 'text-gray-200'}>★</span>
+            <span className={star <= (hover || value) ? 'text-premium-500' : 'text-gray-200'}>★</span>
           </button>
         ))}
       </div>

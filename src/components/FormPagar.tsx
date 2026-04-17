@@ -10,7 +10,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full flex items-center justify-center gap-2.5 bg-[#009EE3] hover:bg-[#0088C7] disabled:opacity-60 text-white py-3.5 rounded-xl font-bold text-base transition-colors shadow-sm"
+      className="w-full flex items-center justify-center gap-2.5 bg-[#009EE3] hover:bg-[#0088C7] disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl font-medium text-sm transition-colors shadow-sm"
     >
       {pending ? (
         <>
@@ -52,7 +52,7 @@ export default function FormPagar({ servicioId, profesionalId, titulo, montoSuge
       <input type="hidden" name="monto"          value={monto} />
 
       {state?.error && (
-        <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl">
           {state.error}
         </div>
       )}
@@ -72,7 +72,7 @@ export default function FormPagar({ servicioId, profesionalId, titulo, montoSuge
             onChange={(e) => setMonto(Number(e.target.value))}
             placeholder="80000"
             required
-            className="w-full border border-gray-200 rounded-lg pl-8 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#009EE3]"
+            className="w-full border border-gray-200 rounded-xl pl-8 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#009EE3]"
           />
         </div>
         {montoSugerido && montoSugerido > 0 && (

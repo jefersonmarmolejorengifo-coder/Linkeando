@@ -52,9 +52,9 @@ export default function PanelSolicitudes() {
 
   return (
     <div className="px-4 pt-4">
-      <div className="bg-[#085041] rounded-xl px-4 py-3 mb-4">
+      <div className="bg-pro-500 rounded-xl px-4 py-3 mb-4">
         <h1 className="text-[16px] font-medium text-white">Solicitudes</h1>
-        <p className="text-[12px] text-[#9FE1CB]">Encuentra trabajos que coincidan con tu perfil</p>
+        <p className="text-[12px] text-verde-200">Encuentra trabajos que coincidan con tu perfil</p>
       </div>
 
       {/* Tabs */}
@@ -63,7 +63,7 @@ export default function PanelSolicitudes() {
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`flex-1 py-2 text-[12px] rounded-md font-medium transition-colors ${tab === key ? 'bg-[#085041] text-white' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`flex-1 py-2 text-[12px] rounded-md font-medium transition-colors ${tab === key ? 'bg-pro-500 text-white' : 'text-gray-500 hover:text-gray-700'}`}
           >
             {label}
           </button>
@@ -74,7 +74,7 @@ export default function PanelSolicitudes() {
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
         <button
           onClick={() => setCatFiltro(null)}
-          className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] border transition-colors ${!catFiltro ? 'bg-[#085041] text-white border-[#085041]' : 'bg-white text-gray-500 border-gray-200'}`}
+          className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] border transition-colors ${!catFiltro ? 'bg-pro-500 text-white border-pro-500' : 'bg-white text-gray-500 border-gray-200'}`}
         >
           Todas
         </button>
@@ -82,7 +82,7 @@ export default function PanelSolicitudes() {
           <button
             key={cat.key}
             onClick={() => setCatFiltro(catFiltro === cat.key ? null : cat.key)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] border transition-colors ${catFiltro === cat.key ? 'bg-[#085041] text-white border-[#085041]' : misEsp.includes(cat.key) ? 'bg-[#E1F5EE] text-[#085041] border-[#9FE1CB]' : 'bg-white text-gray-500 border-gray-200'}`}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] border transition-colors ${catFiltro === cat.key ? 'bg-pro-500 text-white border-pro-500' : misEsp.includes(cat.key) ? 'bg-verde-50 text-pro-500 border-verde-200' : 'bg-white text-gray-500 border-gray-200'}`}
           >
             {cat.icon} {cat.label}
           </button>
@@ -93,7 +93,7 @@ export default function PanelSolicitudes() {
       {loading ? (
         <div className="space-y-3">{[1, 2, 3].map(i => <div key={i} className="h-28 bg-white rounded-xl animate-pulse" />)}</div>
       ) : filtradas.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#e8e8e6] p-6 text-center text-sm text-gray-400">
+        <div className="bg-white rounded-xl border border-borde p-6 text-center text-sm text-gray-400">
           No hay solicitudes {tab === 'nuevas' ? 'disponibles' : tab === 'en_curso' ? 'en curso' : 'finalizadas'}.
         </div>
       ) : (
@@ -105,13 +105,13 @@ export default function PanelSolicitudes() {
               <button
                 key={sol.id}
                 onClick={() => router.push(`/solicitudes/${sol.id}`)}
-                className="w-full bg-white rounded-xl border border-[#e8e8e6] p-3 text-left hover:border-[#085041] transition-colors"
+                className="w-full bg-white rounded-xl border border-borde p-3 text-left hover:border-pro-500 transition-colors"
               >
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="text-[13px] font-medium flex-1 mr-2">{sol.titulo}</h3>
                   <div className="flex gap-1 flex-shrink-0">
-                    {pct === 100 && <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#E1F5EE] text-[#085041] border border-[#9FE1CB]">100% match</span>}
-                    {sol.urgente && <span className="text-[9px] px-1.5 py-0.5 rounded bg-red-50 text-[#D85A30] border border-red-200">🚨 Urgente</span>}
+                    {pct === 100 && <span className="text-[9px] px-1.5 py-0.5 rounded bg-verde-50 text-pro-500 border border-verde-200">100% match</span>}
+                    {sol.urgente && <span className="text-[9px] px-1.5 py-0.5 rounded bg-red-50 text-urgente-500 border border-red-200">🚨 Urgente</span>}
                   </div>
                 </div>
                 {sol.sid && <div className="text-[10px] font-mono text-gray-400 mb-1">ID: {sol.sid}</div>}
