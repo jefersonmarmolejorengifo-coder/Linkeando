@@ -4,11 +4,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 
-const CATEGORIA_LABELS: Record<string, string> = {
-  plomeria: 'Plomería', electricidad: 'Electricidad', carpinteria: 'Carpintería',
-  pintura: 'Pintura', limpieza: 'Limpieza', jardineria: 'Jardinería',
-  cerrajeria: 'Cerrajería', otros: 'Otros',
-}
+import { CATEGORIA_LABELS } from '@/lib/constants'
 
 export async function crearSolicitud(
   _: unknown,
@@ -30,6 +26,10 @@ export async function crearSolicitud(
 
   const titulo = `${CATEGORIA_LABELS[categoria] ?? categoria} en ${barrio}`
 
+  const modalidad = (formData.get('modalidad') as string) || 'puntual'
+  const cuando = (formData.get('cuando') as string) || null
+  const urgente = formData.get('urgente') === 'true'
+
   const { data, error } = await supabase
     .from('solicitudes')
     .insert({
@@ -42,6 +42,9 @@ export async function crearSolicitud(
       presupuesto_max: presupuesto ? Number(presupuesto) : null,
       foto_url: foto_url || null,
       estado: 'abierta',
+      modalidad,
+      cuando,
+      urgente,
     })
     .select('id')
     .single()
@@ -62,12 +65,39 @@ export async function aceptarPostulacion(
   const postulacion_id = formData.get('postulacion_id') as string
   const solicitud_id = formData.get('solicitud_id') as string
 
+  // Aceptar postulación (el trigger cambia estado de solicitud y rechaza las demás)
   const { error } = await supabase
     .from('postulaciones')
     .update({ estado: 'aceptada' })
     .eq('id', postulacion_id)
 
   if (error) return { error: error.message }
+
+  // Obtener datos para el mensaje de sistema
+  const [{ data: postulacion }, { data: solicitud }, { data: cliente }] = await Promise.all([
+    supabase.from('postulaciones').select('profesional_id').eq('id', postulacion_id).single(),
+    supabase.from('solicitudes').select('titulo, sid, descripcion').eq('id', solicitud_id).single(),
+    supabase.from('usuarios').select('nombre').eq('id', user.id).single(),
+  ])
+
+  if (postulacion && solicitud && cliente) {
+    const { data: profesional } = await supabase
+      .from('usuarios')
+      .select('nombre')
+      .eq('id', postulacion.profesional_id)
+      .single()
+
+    // Insertar mensaje de sistema automático
+    const sid = (solicitud as any).sid ?? ''
+    const contenido = `[SISTEMA] Chat abierto · ${(cliente as any).nombre} seleccionó a ${(profesional as any)?.nombre ?? 'profesional'} · Servicio: ${(solicitud as any).titulo} · ID: ${sid}`
+
+    await supabase.from('mensajes').insert({
+      solicitud_id,
+      remitente_id: user.id,
+      destinatario_id: postulacion.profesional_id,
+      contenido,
+    })
+  }
 
   redirect(`/chat/${solicitud_id}`)
 }

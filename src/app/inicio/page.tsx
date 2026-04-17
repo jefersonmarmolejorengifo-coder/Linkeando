@@ -3,21 +3,10 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
+import { CATEGORIAS } from '@/lib/constants'
 import type { Usuario, Solicitud } from '@/types'
 
 type Mode = 'cliente' | 'profesional'
-
-/* ── Categorías ─────────────────────────────────────────────── */
-const CATEGORIAS = [
-  { key: 'cerrajeria',   icon: '🔑', label: 'Cerrajería' },
-  { key: 'plomeria',     icon: '🔧', label: 'Plomería' },
-  { key: 'electricidad', icon: '⚡', label: 'Electricidad' },
-  { key: 'pintura',      icon: '🎨', label: 'Pintura' },
-  { key: 'carpinteria',  icon: '🪚', label: 'Carpintería' },
-  { key: 'limpieza',     icon: '🧹', label: 'Limpieza' },
-  { key: 'jardineria',   icon: '🌿', label: 'Jardinería' },
-  { key: 'otros',        icon: '🏠', label: 'Otros' },
-]
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 function initials(nombre: string) {
@@ -63,13 +52,13 @@ function BottomNavCliente({ router, msgDot }: { router: ReturnType<typeof useRou
       {[
         { label: 'Inicio',   href: '/inicio',      active: true,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M3 12L12 3l9 9M4 10v10h16V10"/></svg> },
-        { label: 'Explorar', href: '/servicios',   active: false,
+        { label: 'Explorar', href: '/explorar',   active: false,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> },
         { label: 'Mapa',     href: '/mapa',        active: false,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
         { label: 'Mensajes', href: '/solicitudes', active: false, dot: msgDot,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-        { label: 'Servicios',href: '/solicitudes', active: false,
+        { label: 'Servicios',href: '/mis-solicitudes', active: false,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> },
       ].map((item) => (
         <button
@@ -92,16 +81,16 @@ function BottomNavPro({ router, chatDot }: { router: ReturnType<typeof useRouter
   return (
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-[#e8e8e6] flex justify-around py-2 z-40">
       {[
-        { label: 'Dashboard',   href: '/inicio',      active: true,
+        { label: 'Dashboard',   href: '/panel',              active: true,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> },
-        { label: 'Solicitudes', href: '/solicitudes', active: false,
+        { label: 'Solicitudes', href: '/panel/solicitudes', active: false,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> },
-        { label: 'Chat',        href: '/solicitudes', active: false, dot: chatDot,
+        { label: 'Chat',        href: '/panel/mensajes',    active: false, dot: chatDot,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-        { label: 'Mi perfil',   href: '/perfil',      active: false,
+        { label: 'Mi perfil',   href: '/panel/perfil',      active: false,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
-        { label: 'Premium',     href: '/perfil',      active: false,
-          icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> },
+        { label: 'Premium',     href: '/panel/premium',     active: false,
+          icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
       ].map((item) => (
         <button
           key={item.label}

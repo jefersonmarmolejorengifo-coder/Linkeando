@@ -1,27 +1,16 @@
-import type { Categoria } from '@/types'
-
-const CATEGORY_LABELS: Record<Categoria, string> = {
-  plomeria: 'Plomería',
-  electricidad: 'Electricidad',
-  carpinteria: 'Carpintería',
-  pintura: 'Pintura',
-  limpieza: 'Limpieza',
-  jardineria: 'Jardinería',
-  cerrajeria: 'Cerrajería',
-  otros: 'Otros',
-}
+import { CATEGORIA_LABELS } from '@/lib/constants'
 
 export default function ServiciosPage({
   searchParams,
 }: {
   searchParams: { categoria?: string }
 }) {
-  const categoria = searchParams.categoria as Categoria | undefined
+  const categoria = searchParams.categoria
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">
-        {categoria ? CATEGORY_LABELS[categoria] ?? 'Servicios' : 'Todos los servicios'}
+        {categoria ? CATEGORIA_LABELS[categoria] ?? 'Servicios' : 'Todos los servicios'}
       </h1>
       <p className="text-gray-500 mb-8">Cali, Colombia</p>
 

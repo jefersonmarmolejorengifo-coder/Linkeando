@@ -109,10 +109,25 @@ export default function ChatWindow({
 
         {mensajes.map((m) => {
           const esMio = m.remitente_id === userId
+          const esSistema = m.contenido.startsWith('[SISTEMA]')
           const hora = new Date(m.created_at).toLocaleTimeString('es-CO', {
             hour: '2-digit',
             minute: '2-digit',
           })
+
+          // Mensaje de sistema
+          if (esSistema) {
+            const texto = m.contenido.replace('[SISTEMA] ', '')
+            return (
+              <div key={m.id} className="flex justify-center px-4">
+                <div className="bg-[#f5f5f3] border border-[#e8e8e6] rounded-xl px-4 py-2.5 text-center max-w-[85%]">
+                  <p className="text-[11px] text-gray-500 leading-relaxed">{texto}</p>
+                  <p className="text-[9px] text-gray-400 mt-1">{hora}</p>
+                </div>
+              </div>
+            )
+          }
+
           return (
             <div
               key={m.id}

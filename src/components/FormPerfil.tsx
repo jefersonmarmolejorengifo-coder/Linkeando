@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
 import { actualizarPerfil } from '@/app/actions/perfil'
+import { BARRIOS_CALI, CATEGORIA_LABELS } from '@/lib/constants'
 import type { Usuario } from '@/types'
 
 // ── Botón de geolocalización (solo para profesionales) ────────
@@ -60,40 +61,6 @@ function GeoButton({
       )}
     </div>
   )
-}
-
-const BARRIOS_CALI = [
-  {
-    zona: 'Norte',
-    barrios: ['Granada', 'Chipichape', 'Versalles', 'Normandía', 'Los Álamos', 'El Bosque', 'Vipasa', 'Centenario', 'El Refugio'],
-  },
-  {
-    zona: 'Centro',
-    barrios: ['El Centro', 'San Nicolás', 'Alameda', 'La Flora', 'Galerías', 'Santa Rosa', 'El Calvario', 'San Pedro'],
-  },
-  {
-    zona: 'Sur',
-    barrios: ['Ciudad Jardín', 'El Peñón', 'San Fernando', 'Tequendama', 'El Ingenio', 'Meléndez', 'Pance', 'Lili', 'Caney', 'La Hacienda', 'Capri'],
-  },
-  {
-    zona: 'Oriente',
-    barrios: ['Aguablanca', 'Marroquín', 'El Diamante', 'Villanueva', 'Alfonso López', 'Floralia', 'El Poblado', 'Comuneros'],
-  },
-  {
-    zona: 'Oeste / Ladera',
-    barrios: ['Siloé', 'Terrón Colorado', 'Univalle', 'Manzanares', 'El Cortijo', 'Alto Menga', 'La Sultana'],
-  },
-]
-
-const CATEGORIA_LABELS: Record<string, string> = {
-  plomeria: 'Plomería',
-  electricidad: 'Electricidad',
-  carpinteria: 'Carpintería',
-  pintura: 'Pintura',
-  limpieza: 'Limpieza',
-  jardineria: 'Jardinería',
-  cerrajeria: 'Cerrajería',
-  otros: 'Otros',
 }
 
 function SubmitButton() {

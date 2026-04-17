@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { login } from '@/app/actions/auth'
 import { useSearchParams } from 'next/navigation'
+import { createClient } from '@/utils/supabase/client'
 
 const LogoIcon = () => (
   <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
@@ -157,6 +158,13 @@ export default function LoginPage() {
 
           <button
             type="button"
+            onClick={async () => {
+              const supabase = createClient()
+              await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: `${window.location.origin}/auth/callback` },
+              })
+            }}
             className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
           >
             <GoogleIcon />

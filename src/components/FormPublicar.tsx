@@ -4,25 +4,7 @@ import { useRef, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
 import { createClient } from '@/utils/supabase/client'
 import { crearSolicitud } from '@/app/actions/solicitudes'
-
-const BARRIOS_CALI = [
-  { zona: 'Norte', barrios: ['Granada', 'Chipichape', 'Versalles', 'Normandía', 'Los Álamos', 'El Bosque', 'Vipasa', 'Centenario', 'El Refugio'] },
-  { zona: 'Centro', barrios: ['El Centro', 'San Nicolás', 'Alameda', 'La Flora', 'Galerías', 'Santa Rosa', 'El Calvario', 'San Pedro'] },
-  { zona: 'Sur', barrios: ['Ciudad Jardín', 'El Peñón', 'San Fernando', 'Tequendama', 'El Ingenio', 'Meléndez', 'Pance', 'Lili', 'Caney', 'La Hacienda', 'Capri'] },
-  { zona: 'Oriente', barrios: ['Aguablanca', 'Marroquín', 'El Diamante', 'Villanueva', 'Alfonso López', 'Floralia', 'El Poblado', 'Comuneros'] },
-  { zona: 'Oeste / Ladera', barrios: ['Siloé', 'Terrón Colorado', 'Univalle', 'Manzanares', 'El Cortijo', 'Alto Menga', 'La Sultana'] },
-]
-
-const CATEGORIAS = [
-  { value: 'plomeria', label: '🔧 Plomería' },
-  { value: 'electricidad', label: '⚡ Electricidad' },
-  { value: 'carpinteria', label: '🪚 Carpintería' },
-  { value: 'pintura', label: '🎨 Pintura' },
-  { value: 'limpieza', label: '🧹 Limpieza' },
-  { value: 'jardineria', label: '🌿 Jardinería' },
-  { value: 'cerrajeria', label: '🔑 Cerrajería' },
-  { value: 'otros', label: '🛠️ Otros' },
-]
+import { CATEGORIAS, BARRIOS_CALI, MODALIDADES } from '@/lib/constants'
 
 function SubmitButton({ disabled }: { disabled?: boolean }) {
   const { pending } = useFormStatus()
@@ -37,12 +19,14 @@ function SubmitButton({ disabled }: { disabled?: boolean }) {
   )
 }
 
-export default function FormPublicar({ userId }: { userId: string }) {
+export default function FormPublicar({ userId, urgente: isUrgente }: { userId: string; urgente?: boolean }) {
   const [state, formAction] = useFormState(crearSolicitud, null)
   const [fotoUrl, setFotoUrl] = useState('')
   const [fotoPreview, setFotoPreview] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [fotoError, setFotoError] = useState<string | null>(null)
+  const [urgente, setUrgente] = useState(isUrgente ?? false)
+  const [modalidad, setModalidad] = useState('puntual')
   const inputRef = useRef<HTMLInputElement>(null)
 
   async function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -80,6 +64,19 @@ export default function FormPublicar({ userId }: { userId: string }) {
       )}
 
       <input type="hidden" name="foto_url" value={fotoUrl} />
+      <input type="hidden" name="urgente" value={urgente ? 'true' : 'false'} />
+      <input type="hidden" name="modalidad" value={modalidad} />
+
+      {/* Urgente */}
+      {urgente && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <span className="text-lg">🚨</span>
+          <div>
+            <p className="text-[13px] font-medium text-red-700">Solicitud urgente</p>
+            <p className="text-[11px] text-red-500">Los profesionales verán tu solicitud como prioritaria</p>
+          </div>
+        </div>
+      )}
 
       {/* Categoría */}
       <div>
@@ -94,9 +91,34 @@ export default function FormPublicar({ userId }: { userId: string }) {
         >
           <option value="" disabled>Selecciona una categoría</option>
           {CATEGORIAS.map((c) => (
-            <option key={c.value} value={c.value}>{c.label}</option>
+            <option key={c.key} value={c.key}>{c.icon} {c.label}</option>
           ))}
         </select>
+      </div>
+
+      {/* Modalidad */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Modalidad de trabajo</label>
+        <select
+          value={modalidad}
+          onChange={(e) => setModalidad(e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+        >
+          {MODALIDADES.map((m) => (
+            <option key={m.key} value={m.key}>{m.label}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Cuándo */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">¿Cuándo lo necesitas?</label>
+        <input
+          name="cuando"
+          type="text"
+          placeholder="Ej: Lo antes posible, mañana por la tarde, esta semana..."
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+        />
       </div>
 
       {/* Descripción */}
@@ -184,6 +206,20 @@ export default function FormPublicar({ userId }: { userId: string }) {
         />
         {fotoError && <p className="text-xs text-red-500 mt-1">{fotoError}</p>}
       </div>
+
+      {/* Toggle urgente si no venía como prop */}
+      {!isUrgente && (
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setUrgente(!urgente)}
+            className={`w-10 h-[22px] rounded-full relative transition-colors flex-shrink-0 ${urgente ? 'bg-[#D85A30]' : 'bg-gray-300'}`}
+          >
+            <span className={`absolute top-[2px] w-[18px] h-[18px] bg-white rounded-full transition-all ${urgente ? 'left-[20px]' : 'left-[2px]'}`} />
+          </button>
+          <span className="text-sm text-gray-600">🚨 Marcar como urgente</span>
+        </div>
+      )}
 
       <SubmitButton disabled={uploading} />
     </form>
