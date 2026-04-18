@@ -18,18 +18,6 @@ export default function PanelEspecialidades() {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) { router.replace('/auth/login'); return }
 
-      // Verificar que sea profesional
-      const { data: usuario } = await supabase
-        .from('usuarios')
-        .select('tipo')
-        .eq('id', data.user.id)
-        .single()
-
-      if (!usuario || usuario.tipo !== 'profesional') {
-        router.replace('/inicio')
-        return
-      }
-
       setUserId(data.user.id)
 
       // Cargar especialidades existentes
