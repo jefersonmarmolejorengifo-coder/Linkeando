@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
 import { actualizarPerfil } from '@/app/actions/perfil'
-import { BARRIOS_CALI, CATEGORIA_LABELS } from '@/lib/constants'
+import { BARRIOS_POR_CIUDAD, CATEGORIA_LABELS } from '@/lib/constants'
 import type { Usuario } from '@/types'
 
 interface Departamento { id: number; name: string }
@@ -151,7 +151,6 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
     }
   }
 
-  const esCali = ciudadNombre.toLowerCase() === 'cali'
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -257,29 +256,44 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
         <label className="block text-sm font-medium text-gray-700 mb-1">
           {esProfesional ? 'Barrio donde trabajas' : 'Barrio'}
         </label>
-        {esCali ? (
-          <select
-            value={barrio}
-            onChange={e => setBarrio(e.target.value)}
-            disabled={!ciudadNombre}
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500 disabled:bg-gray-50 disabled:text-gray-400"
-          >
-            <option value="">Selecciona tu barrio</option>
-            {BARRIOS_CALI.map(({ zona, barrios }) => (
-              <optgroup key={zona} label={`── ${zona}`}>
-                {barrios.map(b => (
-                  <option key={b} value={b}>{b}</option>
+        {(() => {
+          const listaBarrios = ciudadNombre ? BARRIOS_POR_CIUDAD[ciudadNombre.toLowerCase()] : undefined
+          if (listaBarrios) {
+            return (
+              <select
+                value={barrio}
+                onChange={e => setBarrio(e.target.value)}
+                disabled={!ciudadNombre}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500 disabled:bg-gray-50 disabled:text-gray-400"
+              >
+                <option value="">Selecciona tu barrio</option>
+                {listaBarrios.map(({ zona, barrios }) => (
+                  <optgroup key={zona} label={`── ${zona}`}>
+                    {barrios.map((b: string) => (
+                      <option key={b} value={b}>{b}</option>
+                    ))}
+                  </optgroup>
                 ))}
-              </optgroup>
-            ))}
-          </select>
-        ) : (
-          <div className="flex items-center border border-gray-100 rounded-xl px-3 py-2.5 bg-gray-50">
-            <span className="text-sm text-gray-500">
-              {barrio ? toTitleCase(barrio) : 'Se completará al seleccionar la ciudad'}
-            </span>
-          </div>
-        )}
+              </select>
+            )
+          }
+          if (!ciudadNombre) {
+            return (
+              <div className="flex items-center border border-gray-100 rounded-xl px-3 py-2.5 bg-gray-50">
+                <span className="text-sm text-gray-400">Primero selecciona una ciudad</span>
+              </div>
+            )
+          }
+          return (
+            <input
+              type="text"
+              value={barrio}
+              onChange={e => setBarrio(e.target.value)}
+              placeholder="Escribe tu barrio o sector"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+            />
+          )
+        })()}
       </div>
 
       {/* Campos exclusivos para profesional */}
