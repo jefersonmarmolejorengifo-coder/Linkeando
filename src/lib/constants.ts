@@ -22,58 +22,163 @@ export const CATEGORIA_LABELS: Record<string, string> = Object.fromEntries(
   CATEGORIAS.map((c) => [c.key, c.label]),
 )
 
-// ─── Barrios de Cali (lista completa por zona) ───────────────
+// ─── Barrios de Cali — 22 comunas oficiales ───────────────────
 export const BARRIOS_CALI = [
   {
-    zona: 'Norte',
+    zona: 'C1 · Terrón Colorado',
     barrios: [
-      'Granada', 'San Vicente', 'Versalles', 'Normandía', 'Vipasa', 'Chipichape',
-      'Los Álamos', 'El Bosque', 'El Refugio', 'Centenario', 'La Merced', 'Champagnat',
-      'Mariano Ramos', 'La Flora', 'Arboleda', 'Floresta', 'Camilo Torres', 'Jorge Robledo',
-      'La Campiña', 'Alcázares', 'El Troncal', 'Porvenir', 'La Riviera', 'Bello Horizonte',
-      'Panorama', 'Olaya Herrera', 'Alfonso López Norte', 'Julio Rincón', 'Capri Norte',
-      'Habitación', 'Los Naranjos', 'El Guabal',
+      'Terrón Colorado', 'Polvorines', 'Lleras Camargo', 'Las Orquídeas', 'El Chorro',
+      'Belisario Caicedo', 'Nápoles', 'Jorge Zawadzky', 'Manzanares', 'Ospina Pérez',
+      'Alto Nápoles', 'La Choclona', 'San Luis Gonzaga', 'El Vergel',
     ],
   },
   {
-    zona: 'Centro',
+    zona: 'C2 · Santa Mónica',
     barrios: [
-      'El Centro', 'San Nicolás', 'Alameda', 'Galerías', 'Santa Rosa', 'San Pedro',
-      'San Juan Bosco', 'El Calvario', 'Junín', 'Bretaña', 'Cañaverales', 'Municipal',
-      'Sucre', 'San Cayetano', 'La Esmeralda', 'El Templete', 'Alfonso López Centro',
-      'Benjamín Herrera', 'La Base', 'San Judas', 'Cristóbal Colón', 'Granada Centro',
+      'Santa Mónica Residencial', 'Santa Mónica Popular', 'Normandía', 'Versalles 1',
+      'Versalles 2', 'Menga', 'El Pedregal', 'Champagnat', 'Arboleda', 'Prados del Norte',
+      'Vipasa', 'Los Farallones', 'El Salitre', 'Los Almendros',
     ],
   },
   {
-    zona: 'Sur',
+    zona: 'C3 · Granada',
     barrios: [
-      'Ciudad Jardín', 'El Peñón', 'San Fernando Viejo', 'San Fernando Nuevo',
-      'Tequendama', 'Miraflores', 'El Ingenio I', 'El Ingenio II', 'Meléndez',
-      'La Hacienda', 'Capri', 'Lili', 'Pance', 'El Caney', 'La Sirena',
-      'Colseguros', 'El Cedro', 'Quintas de Don Simón', 'Santa Anita', 'Prados del Sur',
-      'Portales de Valle', 'Calipso', 'Nápoles Sur', 'Ciudadela Comfandi',
-      'Unidad Deportiva', 'Pasoancho', 'La Selva', 'Ciudad Capri', 'Los Portales',
-      'Napoles', 'El Limonar', 'Urbanización Caldas',
+      'Modelo', 'Municipal', 'Granada', 'San Vicente', 'Santa Rita', 'Centenario',
+      'Departamental', 'San Pedro', 'Galerías', 'San Nicolás',
     ],
   },
   {
-    zona: 'Oriente',
+    zona: 'C4 · Alameda',
     barrios: [
-      'Aguablanca', 'Marroquín I', 'Marroquín II', 'El Diamante I', 'El Diamante II',
-      'Villanueva', 'Alfonso López', 'Floralia', 'El Poblado I', 'El Poblado II',
-      'Comuneros I', 'Comuneros II', 'Mojica', 'Manuela Beltrán', 'El Pondaje',
-      'Charco Azul', 'Petecuy I', 'Petecuy II', 'Petecuy III', 'Sardi',
-      'Julia Palacios', 'Laureano Gómez', 'Calimío', 'El Vallado', 'Alirio Mora Borrero',
-      'Omar Torrijos', 'Rodrigo Lara Bonilla', 'Palmas I', 'Palmas II',
+      'Jorge Robledo', 'Benjamín Herrera', 'Ricardo Balcázar', 'La Merced', 'Bretaña',
+      'Alameda', 'La Concordia', 'Sucre', 'Camilo Torres',
     ],
   },
   {
-    zona: 'Ladera / Oeste',
+    zona: 'C5 · Guabal',
     barrios: [
-      'Siloé', 'Terrón Colorado', 'La Sultana', 'El Cortijo', 'Alto Menga',
-      'Manzanares', 'El Rodeo', 'Belisario Caicedo', 'Nápoles Ladera', 'Jorge Zawadzky',
-      'Polvorines', 'Lleras Camargo', 'Ospina Pérez', 'Los Chorros', 'Las Orquídeas',
-      'Univalle', 'Alto Nápoles', 'La Choclona', 'San Luis Gonzaga', 'Bello Horizonte Ladera',
+      'Alfonso López 1', 'Alfonso López 2', 'La Base', 'Junín', 'Cañaverales',
+      'El Paraíso Norte', 'Guabal', 'Obrero', 'Tres de Julio', 'Cristóbal Colón',
+      'Santa Fe', 'La Flora',
+    ],
+  },
+  {
+    zona: 'C6 · La Rivera',
+    barrios: [
+      'Floralia', 'Doce de Octubre', 'El Troncal', 'Panamericano', 'Los Álamos',
+      'La Rivera', 'La Campiña', 'Boyacá', 'El Poblado 1', 'El Poblado 2',
+      'La Esperanza', 'Marroquín 1', 'Marroquín 2',
+    ],
+  },
+  {
+    zona: 'C7 · Chipichape',
+    barrios: [
+      'Chipichape', 'El Bosque', 'El Refugio', 'Los Naranjos', 'Simón Bolívar',
+      'La Flora Norte', 'Porvenir', 'Habitación', 'Alcázares',
+    ],
+  },
+  {
+    zona: 'C8 · Salomia',
+    barrios: [
+      'San Luis', 'Olaya Herrera', 'Salomia', 'San Judas Parte Alta', 'San Judas Parte Baja',
+      'Urb. Antonio Nariño', 'El Troncal Centro', 'Panorama',
+    ],
+  },
+  {
+    zona: 'C9 · Los Comuneros',
+    barrios: [
+      'El Popular 1', 'El Popular 2', 'El Sena', 'Julio Rincón', 'El Rodeo',
+      'El Pondaje', 'Prados del Sur', 'Villacolombia', 'Mojica', 'Los Comuneros 2',
+    ],
+  },
+  {
+    zona: 'C10 · El Centro',
+    barrios: [
+      'El Centro', 'San Juan Bosco', 'El Calvario', 'Santa Rosa', 'El Hoyo',
+      'Sucre Centro', 'Obrero Centro', 'El Templete', 'San Cayetano Bajo',
+    ],
+  },
+  {
+    zona: 'C11 · San Cayetano',
+    barrios: [
+      'San Cayetano', 'La Esmeralda', 'Los Andes', 'Jorge Isaacs', 'Bello Horizonte',
+      'La Merced Alta', 'El Peñón Centro',
+    ],
+  },
+  {
+    zona: 'C12 · El Vallado',
+    barrios: [
+      'El Vallado', 'Calimío', 'Cauca Viejo', 'El Diamante 1', 'El Diamante 2',
+      'Marroquín 3', 'El Vergel Oriente',
+    ],
+  },
+  {
+    zona: 'C13 · El Poblado Oriente',
+    barrios: [
+      'Comuneros 1', 'Comuneros 2', 'Manuela Beltrán', 'Charco Azul', 'El Pondaje Oriente',
+      'El Retiro',
+    ],
+  },
+  {
+    zona: 'C14 · Villanueva',
+    barrios: [
+      'Villanueva', 'Alfonso López Oriente', 'Floralia Oriente', 'El Diamante Oriente',
+      'Alirio Mora', 'Petecuy 1 Sur',
+    ],
+  },
+  {
+    zona: 'C15 · Sardi',
+    barrios: [
+      'Sardi', 'Julia Palacios', 'Laureano Gómez', 'Omar Torrijos', 'Rodrigo Lara Bonilla',
+      'El Amparo', 'Petecuy 3',
+    ],
+  },
+  {
+    zona: 'C16 · Petecuy',
+    barrios: [
+      'Petecuy 1', 'Petecuy 2', 'Petecuy 3', 'Alirio Mora Borrero', 'El Vallado Norte',
+    ],
+  },
+  {
+    zona: 'C17 · El Ingenio',
+    barrios: [
+      'El Ingenio 1', 'El Ingenio 2', 'El Ingenio 3', 'Capri', 'El Caney', 'La Hacienda',
+      'Ciudad Jardín', 'Villa del Sol', 'San Joaquín', 'Los Portales', 'El Limonar',
+      'Prados del Limonar', 'Quintas de Don Simón', 'Calipso',
+    ],
+  },
+  {
+    zona: 'C18 · Meléndez',
+    barrios: [
+      'El Jordán', 'Cuarteles Nápoles', 'Meléndez', 'Lili', 'La Sirena', 'Los Álamos Sur',
+      'Pance', 'Colinas del Sur', 'La Hacienda Sur', 'Santa Anita',
+    ],
+  },
+  {
+    zona: 'C19 · San Fernando',
+    barrios: [
+      'El Peñón', 'San Fernando Viejo', 'San Fernando Nuevo', 'Tequendama', 'Miraflores',
+      'Colseguros', 'Bellavista', 'La Merced Sur', 'Santa Rita Sur', 'El Cedro',
+    ],
+  },
+  {
+    zona: 'C20 · Siloé',
+    barrios: [
+      'Siloé', 'El Cortijo', 'Alto Menga', 'La Sultana', 'El Rodeo Ladera',
+      'Las Vegas Ladera', 'Bello Horizonte Ladera', 'Los Chorros',
+    ],
+  },
+  {
+    zona: 'C21 · Rodrigo Lara',
+    barrios: [
+      'Rodrigo Lara Bonilla', 'Palmas 1', 'Palmas 2', 'Puertas del Sol', 'Compartir',
+      'El Remanso',
+    ],
+  },
+  {
+    zona: 'C22 · Pance',
+    barrios: [
+      'Pance', 'Ciudadela Comfandi', 'El Retiro Sur', 'El Cacique', 'La Sirena Sur',
     ],
   },
 ]

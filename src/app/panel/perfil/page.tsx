@@ -18,6 +18,11 @@ export default function PanelPerfil() {
   const latRef = useRef<HTMLInputElement>(null)
   const lngRef = useRef<HTMLInputElement>(null)
 
+  // Especialidades inline
+  const [editandoEsp, setEditandoEsp] = useState(false)
+  const [selectedEsp, setSelectedEsp] = useState<Set<string>>(new Set())
+  const [savingEsp, setSavingEsp] = useState(false)
+
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getUser().then(async ({ data }) => {
@@ -30,7 +35,10 @@ export default function PanelPerfil() {
       ])
       if (u) setUsuario(u as Usuario)
       if (p) setPerfil(p as Profesional)
-      if (esp) setEspecialidades(esp as ProEspecialidad[])
+      if (esp) {
+        setEspecialidades(esp as ProEspecialidad[])
+        setSelectedEsp(new Set((esp as ProEspecialidad[]).map(e => e.categoria as string)))
+      }
       if (z) setZonas(z as ProZona[])
       setLoading(false)
     })
@@ -43,7 +51,6 @@ export default function PanelPerfil() {
     const fd = new FormData(e.currentTarget)
     const supabase = createClient()
 
-    // Actualizar usuarios
     const { error: errU } = await supabase.from('usuarios').update({
       nombre: fd.get('nombre') as string,
       telefono: (fd.get('telefono') as string) || null,
@@ -56,7 +63,6 @@ export default function PanelPerfil() {
 
     if (errU) { setMsg({ type: 'err', text: errU.message }); setSaving(false); return }
 
-    // Actualizar profesionales
     await supabase.from('profesionales').upsert({
       usuario_id: usuario!.id,
       bio: (fd.get('bio') as string) || null,
@@ -69,6 +75,45 @@ export default function PanelPerfil() {
     setMsg({ type: 'ok', text: '¡Perfil actualizado correctamente!' })
     setSaving(false)
     setTimeout(() => msgRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
+  }
+
+  async function handleGuardarEspecialidades() {
+    if (!usuario) return
+    setSavingEsp(true)
+    const supabase = createClient()
+
+    await supabase.from('pro_especialidades').delete().eq('profesional_id', usuario.id)
+
+    const items = Array.from(selectedEsp)
+    if (items.length > 0) {
+      await supabase.from('pro_especialidades').insert(
+        items.map((cat, i) => ({
+          profesional_id: usuario.id,
+          categoria: cat,
+          es_principal: i === 0,
+        }))
+      )
+    }
+
+    // Refrescar estado local
+    const { data: fresh } = await supabase
+      .from('pro_especialidades')
+      .select('*')
+      .eq('profesional_id', usuario.id)
+    if (fresh) setEspecialidades(fresh as ProEspecialidad[])
+
+    setSavingEsp(false)
+    setEditandoEsp(false)
+    setMsg({ type: 'ok', text: 'Especialidades actualizadas.' })
+  }
+
+  function toggleEsp(key: string) {
+    setSelectedEsp(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
   }
 
   function detectarUbi() {
@@ -163,39 +208,92 @@ export default function PanelPerfil() {
           </button>
         </div>
 
-        {/* Especialidades (solo lectura, link a editar) */}
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Especialidades</label>
-          <div className="flex gap-2 flex-wrap mb-2">
-            {especialidades.length > 0 ? especialidades.map((e) => {
-              const cat = CATEGORIAS.find(c => c.key === e.categoria)
-              return (
-                <span key={e.id} className={`text-[12px] px-3 py-1.5 rounded-full border ${e.es_principal ? 'bg-pro-500 text-white border-pro-500' : 'bg-verde-50 text-pro-500 border-verde-200'}`}>
-                  {cat ? `${cat.icon} ${cat.label}` : e.categoria}
-                  {e.es_principal && ' ★'}
-                </span>
-              )
-            }) : <span className="text-[12px] text-gray-400">Sin especialidades</span>}
-          </div>
-          <a href="/panel/especialidades" className="text-xs text-pro-500 underline">Gestionar especialidades →</a>
-        </div>
-
-        {/* Zonas (solo lectura, lista) */}
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Zonas de cobertura</label>
-          <div className="flex gap-2 flex-wrap">
-            {zonas.length > 0 ? zonas.map((z) => (
-              <span key={z.id} className="text-[12px] px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
-                📍 {z.barrio}
-              </span>
-            )) : <span className="text-[12px] text-gray-400">Sin zonas configuradas</span>}
-          </div>
-        </div>
-
         <button type="submit" disabled={saving} className="w-full bg-pro-500 hover:bg-pro-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-medium transition-colors">
           {saving ? 'Guardando…' : 'Guardar cambios'}
         </button>
       </form>
+
+      {/* ── Especialidades inline ─────────────────────────────── */}
+      <div className="mt-6 bg-white border border-gray-100 rounded-xl p-4">
+        <div className="flex items-center justify-between mb-3">
+          <label className="text-xs font-medium text-gray-500">Mis especialidades</label>
+          <button
+            type="button"
+            onClick={() => { setEditandoEsp(v => !v); setMsg(null) }}
+            className="text-xs text-pro-500 font-medium hover:underline"
+          >
+            {editandoEsp ? 'Cancelar' : '＋ Editar'}
+          </button>
+        </div>
+
+        {/* Pastillas actuales */}
+        <div className="flex gap-2 flex-wrap mb-3">
+          {especialidades.length > 0 ? especialidades.map((e) => {
+            const cat = CATEGORIAS.find(c => c.key === e.categoria)
+            return (
+              <span key={e.id} className={`text-[12px] px-3 py-1.5 rounded-full border ${e.es_principal ? 'bg-pro-500 text-white border-pro-500' : 'bg-verde-50 text-pro-500 border-verde-200'}`}>
+                {cat ? `${cat.icon} ${cat.label}` : e.categoria}
+                {e.es_principal && ' ★'}
+              </span>
+            )
+          }) : <span className="text-[12px] text-gray-400">Sin especialidades — añade al menos una</span>}
+        </div>
+
+        {/* Panel expandible de selección */}
+        {editandoEsp && (
+          <div className="border-t border-gray-100 pt-3">
+            <p className="text-[11px] text-gray-400 mb-2">
+              Selecciona una o varias. La primera marcada será tu especialidad principal (★).
+            </p>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {CATEGORIAS.map((cat) => {
+                const activo = selectedEsp.has(cat.key)
+                return (
+                  <button
+                    key={cat.key}
+                    type="button"
+                    onClick={() => toggleEsp(cat.key)}
+                    className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 text-left transition-all ${
+                      activo ? 'bg-[#E1F5EE] border-[#9FE1CB]' : 'bg-white border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <span className="text-lg flex-shrink-0">{cat.icon}</span>
+                    <span className={`text-[11px] font-medium leading-tight flex-1 ${activo ? 'text-[#085041]' : 'text-gray-500'}`}>
+                      {cat.label}
+                    </span>
+                    {activo && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                        <circle cx="12" cy="12" r="10" fill="#1D9E75" />
+                        <path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={handleGuardarEspecialidades}
+              disabled={savingEsp || selectedEsp.size === 0}
+              className="w-full bg-pro-500 hover:bg-pro-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2.5 rounded-xl text-sm font-medium transition-colors"
+            >
+              {savingEsp ? 'Guardando…' : `Guardar especialidades (${selectedEsp.size})`}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Zonas de cobertura (solo lectura) */}
+      <div className="mt-4 bg-white border border-gray-100 rounded-xl p-4">
+        <label className="block text-xs font-medium text-gray-500 mb-2">Zonas de cobertura</label>
+        <div className="flex gap-2 flex-wrap">
+          {zonas.length > 0 ? zonas.map((z) => (
+            <span key={z.id} className="text-[12px] px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+              📍 {z.barrio}
+            </span>
+          )) : <span className="text-[12px] text-gray-400">Sin zonas configuradas</span>}
+        </div>
+      </div>
     </div>
   )
 }

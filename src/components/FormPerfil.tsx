@@ -13,6 +13,11 @@ function toTitleCase(str: string) {
   return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
 }
 
+// Normaliza para comparar: sin acentos, minúsculas
+function normalizarClave(str: string) {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
+
 // ── Botón de geolocalización (solo para profesionales) ────────
 function GeoButton({
   latRef,
@@ -98,6 +103,11 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
   const [loadingDepts, setLoadingDepts] = useState(true)
   const [loadingCiudades, setLoadingCiudades] = useState(false)
 
+  // Geocodificación por dirección
+  const [direccion, setDireccion] = useState('')
+  const [geocodificando, setGeocodificando] = useState(false)
+  const [geoMsg, setGeoMsg] = useState<string | null>(null)
+
   // Cargar departamentos al montar
   useEffect(() => {
     fetch('https://api-colombia.com/api/v1/Department')
@@ -107,7 +117,7 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
         setDepartamentos(sorted)
         if (usuario.departamento) {
           const found = sorted.find(d =>
-            d.name.toLowerCase() === usuario.departamento!.toLowerCase()
+            normalizarClave(d.name) === normalizarClave(usuario.departamento!)
           )
           if (found) setDeptId(found.id)
         }
@@ -130,6 +140,73 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
       .catch(() => setLoadingCiudades(false))
   }, [deptId])
 
+  // Geocodificación con debounce
+  useEffect(() => {
+    if (!direccion.trim() || direccion.length < 8) { setGeoMsg(null); return }
+    const timer = setTimeout(() => geocodificarDireccion(direccion), 700)
+    return () => clearTimeout(timer)
+  }, [direccion, departamentos]) // departamentos como dep para no correr antes de que carguen
+
+  async function geocodificarDireccion(dir: string) {
+    if (!departamentos.length) return
+    setGeocodificando(true)
+    setGeoMsg(null)
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(dir)}&format=json&addressdetails=1&countrycodes=co&limit=1`,
+        { headers: { 'Accept-Language': 'es' } }
+      )
+      const data = await res.json()
+      if (!data.length) {
+        setGeoMsg('No se encontró la dirección. Completa los campos manualmente.')
+        setGeocodificando(false)
+        return
+      }
+
+      const r = data[0]
+      const addr = r.address ?? {}
+
+      // Lat / Lng
+      if (latRef.current) latRef.current.value = String(r.lat)
+      if (lngRef.current) lngRef.current.value = String(r.lon)
+
+      // Departamento
+      const stateName: string = addr.state ?? addr.region ?? ''
+      const foundDept = departamentos.find(d => normalizarClave(d.name) === normalizarClave(stateName))
+      if (foundDept) {
+        setDeptNombre(foundDept.name)
+        setDeptId(foundDept.id)
+
+        // Ciudades de ese departamento
+        const citiesRes = await fetch(`https://api-colombia.com/api/v1/Department/${foundDept.id}/cities`)
+        const citiesData: Ciudad[] = await citiesRes.json()
+        const sortedCities = citiesData.sort((a, b) => a.name.localeCompare(b.name))
+        setCiudades(sortedCities)
+
+        // Ciudad
+        const cityRaw: string = addr.city ?? addr.town ?? addr.municipality ?? addr.county ?? ''
+        const foundCity = sortedCities.find(c => normalizarClave(c.name) === normalizarClave(cityRaw))
+        const resolvedCity = foundCity ? foundCity.name : cityRaw.toUpperCase()
+        setCiudadNombre(resolvedCity)
+
+        // Barrio — solo sobreescribir si Nominatim devuelve algo concreto
+        const barrioGeo: string = addr.suburb ?? addr.neighbourhood ?? addr.quarter ?? addr.city_district ?? ''
+        if (barrioGeo) {
+          setBarrio(barrioGeo)
+        } else if (normalizarClave(resolvedCity) !== 'cali') {
+          setBarrio(resolvedCity)
+        }
+
+        setGeoMsg('Ubicación detectada — revisa y ajusta si es necesario.')
+      } else {
+        setGeoMsg('Departamento no reconocido. Selecciónalo manualmente.')
+      }
+    } catch {
+      setGeoMsg('Error al geocodificar. Completa los campos manualmente.')
+    }
+    setGeocodificando(false)
+  }
+
   function handleDeptChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const name = e.target.value
     const found = departamentos.find(d => d.name === name)
@@ -143,23 +220,21 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
   function handleCiudadChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const name = e.target.value
     setCiudadNombre(name)
-    // Para ciudades que no son Cali, el barrio por defecto es el nombre del municipio
-    if (name.toLowerCase() !== 'cali') {
+    if (normalizarClave(name) !== 'cali') {
       setBarrio(name)
     } else {
       setBarrio(usuario.barrio ?? '')
     }
   }
 
-
   return (
     <form action={formAction} className="flex flex-col gap-5">
-      {/* Campos ocultos para departamento, ciudad y barrio */}
+      {/* Campos ocultos */}
       <input type="hidden" name="departamento" value={deptNombre} />
       <input type="hidden" name="ciudad" value={ciudadNombre} />
       <input type="hidden" name="barrio" value={barrio} />
 
-      {/* Mensajes */}
+      {/* Mensajes de servidor */}
       {state?.error && (
         <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
           {state.error}
@@ -213,6 +288,38 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
         />
       </div>
 
+      {/* Dirección — helper de geocodificación */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Dirección
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            value={direccion}
+            onChange={e => setDireccion(e.target.value)}
+            placeholder="Ej: Cra 5 # 12-34, Cali, Colombia"
+            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500"
+          />
+          {geocodificando && (
+            <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-verde-500 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+            </svg>
+          )}
+        </div>
+        {geoMsg && (
+          <p className={`text-xs mt-1 ${geoMsg.startsWith('Ubicación') ? 'text-verde-600' : 'text-gray-400'}`}>
+            {geoMsg}
+          </p>
+        )}
+        {!geoMsg && (
+          <p className="text-xs text-gray-400 mt-1">
+            Escribe tu dirección para rellenar automáticamente los campos de abajo.
+          </p>
+        )}
+      </div>
+
       {/* Departamento */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -257,7 +364,7 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
           {esProfesional ? 'Barrio donde trabajas' : 'Barrio'}
         </label>
         {(() => {
-          const listaBarrios = ciudadNombre ? BARRIOS_POR_CIUDAD[ciudadNombre.toLowerCase()] : undefined
+          const listaBarrios = ciudadNombre ? BARRIOS_POR_CIUDAD[normalizarClave(ciudadNombre)] : undefined
           if (listaBarrios) {
             return (
               <select
@@ -267,9 +374,9 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-verde-500 disabled:bg-gray-50 disabled:text-gray-400"
               >
                 <option value="">Selecciona tu barrio</option>
-                {listaBarrios.map(({ zona, barrios }) => (
+                {listaBarrios.map(({ zona, barrios: bs }) => (
                   <optgroup key={zona} label={`── ${zona}`}>
-                    {barrios.map((b: string) => (
+                    {bs.map((b: string) => (
                       <option key={b} value={b}>{b}</option>
                     ))}
                   </optgroup>
