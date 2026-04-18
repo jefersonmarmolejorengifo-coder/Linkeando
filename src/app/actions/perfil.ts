@@ -20,14 +20,12 @@ export async function actualizarPerfil(
   const telefono    = (formData.get('telefono') as string | null)?.trim() || null
   const barrio      = (formData.get('barrio') as string | null) || null
   const descripcion = (formData.get('descripcion') as string | null)?.trim() || null
-  const tarifaRaw   = formData.get('tarifa') as string | null
-  const tarifa      = tarifaRaw ? parseFloat(tarifaRaw) : null
   const latRaw      = formData.get('lat') as string | null
   const lngRaw      = formData.get('lng') as string | null
 
   if (!nombre) return { error: 'El nombre es obligatorio.' }
 
-  const updates: Record<string, unknown> = { nombre, telefono, barrio, descripcion, tarifa }
+  const updates: Record<string, unknown> = { nombre, telefono, barrio, descripcion }
   if (latRaw && lngRaw) {
     updates.lat = parseFloat(latRaw)
     updates.lng = parseFloat(lngRaw)
