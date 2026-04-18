@@ -1,5 +1,7 @@
 export type Categoria =
   | 'cerrajeria'
+  | 'chapas_electricas'
+  | 'cerrajeria_automotriz'
   | 'plomeria'
   | 'electricidad'
   | 'pintura'

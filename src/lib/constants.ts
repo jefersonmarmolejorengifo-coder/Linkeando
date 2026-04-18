@@ -1,19 +1,19 @@
-// ─── Categorías (14) ──────────────────────────────────────────
+// ─── Categorías / Especialidades (14) ─────────────────────────
 export const CATEGORIAS = [
-  { key: 'cerrajeria',        icon: '🔑', label: 'Cerrajería' },
-  { key: 'plomeria',          icon: '🔧', label: 'Plomería' },
-  { key: 'electricidad',      icon: '⚡', label: 'Electricidad' },
-  { key: 'pintura',           icon: '🎨', label: 'Pintura' },
-  { key: 'albanileria',       icon: '🧱', label: 'Albañilería' },
-  { key: 'carpinteria',       icon: '🪚', label: 'Carpintería' },
-  { key: 'muebles',           icon: '🪑', label: 'Muebles' },
-  { key: 'aire_acondicionado', icon: '❄️', label: 'Aire acondicionado' },
-  { key: 'jardineria',        icon: '🌿', label: 'Jardinería' },
-  { key: 'limpieza',          icon: '🧹', label: 'Limpieza' },
-  { key: 'gas',               icon: '🔥', label: 'Gas / Gasfitería' },
-  { key: 'techos',            icon: '🏠', label: 'Techos y cubiertas' },
-  { key: 'soldadura',         icon: '⚙️', label: 'Soldadura' },
-  { key: 'otros',             icon: '🛠️', label: 'Otros' },
+  { key: 'cerrajeria',            icon: '🔑', label: 'Cerrajería' },
+  { key: 'chapas_electricas',     icon: '🔒', label: 'Chapas eléctricas' },
+  { key: 'cerrajeria_automotriz', icon: '🚗', label: 'Cerrajería automotriz' },
+  { key: 'plomeria',              icon: '🔧', label: 'Plomería' },
+  { key: 'electricidad',          icon: '⚡', label: 'Electricidad' },
+  { key: 'pintura',               icon: '🎨', label: 'Pintura' },
+  { key: 'albanileria',           icon: '🧱', label: 'Albañilería' },
+  { key: 'muebles',               icon: '🪑', label: 'Instalación de muebles' },
+  { key: 'aire_acondicionado',    icon: '❄️', label: 'Aire acondicionado' },
+  { key: 'jardineria',            icon: '🌿', label: 'Jardinería' },
+  { key: 'limpieza',              icon: '🧹', label: 'Limpieza profunda' },
+  { key: 'gas',                   icon: '🔥', label: 'Gas / Gasfitería' },
+  { key: 'techos',                icon: '🏠', label: 'Techos y cubiertas' },
+  { key: 'soldadura',             icon: '⚙️', label: 'Soldadura' },
 ] as const
 
 export type CategoriaKey = (typeof CATEGORIAS)[number]['key']

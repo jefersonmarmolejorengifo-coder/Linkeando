@@ -1,178 +1,186 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { CATEGORIAS } from '@/lib/constants'
-import type { ProEspecialidad } from '@/types'
 
 export default function PanelEspecialidades() {
-  const [especialidades, setEspecialidades] = useState<ProEspecialidad[]>([])
+  const router = useRouter()
+  const [selected, setSelected] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [toast, setToast] = useState('')
   const [userId, setUserId] = useState('')
-  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return
+      if (!data.user) { router.replace('/auth/login'); return }
+
+      // Verificar que sea profesional
+      const { data: usuario } = await supabase
+        .from('usuarios')
+        .select('tipo')
+        .eq('id', data.user.id)
+        .single()
+
+      if (!usuario || usuario.tipo !== 'profesional') {
+        router.replace('/inicio')
+        return
+      }
+
       setUserId(data.user.id)
+
+      // Cargar especialidades existentes
       const { data: esp } = await supabase
         .from('pro_especialidades')
-        .select('*')
+        .select('categoria')
         .eq('profesional_id', data.user.id)
-      if (esp) setEspecialidades(esp as ProEspecialidad[])
+
+      if (esp) {
+        setSelected(new Set(esp.map((e: { categoria: string }) => e.categoria)))
+      }
       setLoading(false)
     })
-  }, [])
+  }, [router])
 
-  const espKeys = especialidades.map(e => e.categoria) as string[]
-  const disponibles = CATEGORIAS.filter(c => !espKeys.includes(c.key))
-
-  async function agregar(catKey: string) {
-    setSaving(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('pro_especialidades')
-      .insert({ profesional_id: userId, categoria: catKey, es_principal: especialidades.length === 0 })
-      .select()
-      .single()
-    if (data) setEspecialidades(prev => [...prev, data as ProEspecialidad])
-    setOpen(false)
-    setSaving(false)
+  function toggle(key: string) {
+    setSelected(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
   }
 
-  async function quitar(catKey: string) {
-    setSaving(true)
-    const supabase = createClient()
-    await supabase.from('pro_especialidades').delete().eq('profesional_id', userId).eq('categoria', catKey)
-    const nuevas = especialidades.filter(e => e.categoria !== catKey)
-    // Si se eliminó la principal y quedan otras, asignar la primera como principal
-    if (nuevas.length > 0 && !nuevas.some(e => e.es_principal)) {
-      await supabase.from('pro_especialidades').update({ es_principal: true }).eq('profesional_id', userId).eq('categoria', nuevas[0].categoria)
-      nuevas[0] = { ...nuevas[0], es_principal: true }
+  async function guardar() {
+    if (selected.size === 0) {
+      setToast('Selecciona al menos una especialidad')
+      setTimeout(() => setToast(''), 3000)
+      return
     }
-    setEspecialidades(nuevas)
-    setSaving(false)
-  }
 
-  async function setPrincipal(catKey: string) {
     setSaving(true)
     const supabase = createClient()
-    await supabase.from('pro_especialidades').update({ es_principal: false }).eq('profesional_id', userId)
-    await supabase.from('pro_especialidades').update({ es_principal: true }).eq('profesional_id', userId).eq('categoria', catKey)
-    setEspecialidades(prev => prev.map(e => ({ ...e, es_principal: e.categoria === catKey })))
-    setSaving(false)
+
+    // Borrar todas las existentes
+    await supabase
+      .from('pro_especialidades')
+      .delete()
+      .eq('profesional_id', userId)
+
+    // Insertar las seleccionadas (la primera como principal)
+    const keys = Array.from(selected)
+    const inserts = keys.map((categoria, i) => ({
+      profesional_id: userId,
+      categoria,
+      es_principal: i === 0,
+    }))
+
+    const { error } = await supabase.from('pro_especialidades').insert(inserts)
+
+    if (error) {
+      setToast('Error al guardar. Intenta de nuevo.')
+      setTimeout(() => setToast(''), 3000)
+      setSaving(false)
+      return
+    }
+
+    setToast('Especialidades guardadas correctamente')
+    setTimeout(() => {
+      router.push('/panel')
+    }, 1200)
   }
 
-  if (loading) return <div className="p-6"><div className="h-64 bg-white rounded-xl animate-pulse" /></div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f5f5f3] flex justify-center">
+        <div className="w-full max-w-sm">
+          <div className="bg-[#085041] px-4 pt-4 pb-4" />
+          <div className="p-4 space-y-3">
+            {[1, 2, 3, 4].map(i => <div key={i} className="h-12 bg-white rounded-xl animate-pulse" />)}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="px-4 pt-4 pb-8">
-      <a href="/panel" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-verde-500 mb-3 no-underline">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
-        Volver al panel
-      </a>
+    <div className="min-h-screen bg-[#f5f5f3] flex justify-center">
+      <div className="w-full max-w-sm flex flex-col min-h-screen relative">
 
-      <div className="bg-pro-500 rounded-xl px-4 py-3 mb-4">
-        <h1 className="text-[16px] font-medium text-white">Mis especialidades</h1>
-        <p className="text-[12px] text-verde-200">Selecciona los oficios que ofreces</p>
-      </div>
-
-      {/* Especialidades seleccionadas */}
-      {especialidades.length > 0 ? (
-        <div className="flex flex-col gap-2 mb-4">
-          {especialidades.map((esp) => {
-            const cat = CATEGORIAS.find(c => c.key === esp.categoria)
-            if (!cat) return null
-            return (
-              <div
-                key={esp.categoria}
-                className={`flex items-center gap-3 rounded-xl border-2 px-3 py-2.5 transition-all ${
-                  esp.es_principal ? 'border-premium-500 bg-premium-50' : 'border-verde-200 bg-verde-50'
-                }`}
-              >
-                <span className="text-xl">{cat.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium text-pro-500">{cat.label}</p>
-                  {esp.es_principal && (
-                    <p className="text-[10px] text-premium-500 font-medium">★ Principal</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-1.5 flex-shrink-0">
-                  {!esp.es_principal && (
-                    <button
-                      onClick={() => setPrincipal(esp.categoria)}
-                      disabled={saving}
-                      className="text-[10px] text-pro-500 border border-pro-500 px-2 py-1 rounded-lg hover:bg-verde-100 transition-colors disabled:opacity-50"
-                      title="Marcar como principal"
-                    >
-                      ★ Principal
-                    </button>
-                  )}
-                  <button
-                    onClick={() => quitar(esp.categoria)}
-                    disabled={saving}
-                    className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
-                    title="Quitar especialidad"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                  </button>
-                </div>
-              </div>
-            )
-          })}
+        {/* Header */}
+        <div className="bg-[#085041] px-4 pt-4 pb-5">
+          <button
+            onClick={() => router.push('/panel')}
+            className="inline-flex items-center gap-1.5 text-[12px] text-[#9FE1CB] hover:text-white mb-3 bg-transparent border-none cursor-pointer"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+            Volver al dashboard
+          </button>
+          <h1 className="text-[18px] font-semibold text-white">Mis especialidades</h1>
+          <p className="text-[12px] text-[#9FE1CB] mt-1 leading-relaxed">
+            Selecciona todas las que dominas. Los clientes te encontrarán al buscar cualquiera de ellas.
+          </p>
         </div>
-      ) : (
-        <div className="bg-white rounded-xl border border-dashed border-gray-300 p-6 text-center mb-4">
-          <p className="text-[13px] text-gray-400 mb-1">No tienes especialidades configuradas</p>
-          <p className="text-[11px] text-gray-300">Agrega al menos una para aparecer en las búsquedas</p>
-        </div>
-      )}
 
-      {/* Selector desplegable */}
-      <div className="relative mb-4">
-        <button
-          onClick={() => setOpen(!open)}
-          disabled={disponibles.length === 0 || saving}
-          className="w-full flex items-center justify-between bg-white border-2 border-dashed border-verde-300 rounded-xl px-4 py-3 text-left hover:border-verde-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <span className="flex items-center gap-2 text-[13px] text-pro-500 font-medium">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
-            {disponibles.length > 0 ? 'Agregar especialidad' : 'Todas las especialidades agregadas'}
-          </span>
-          {disponibles.length > 0 && (
-            <svg
-              width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              className={`text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
-            >
-              <path d="M6 9l6 6 6-6"/>
-            </svg>
-          )}
-        </button>
-
-        {open && disponibles.length > 0 && (
-          <>
-            <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-            <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-borde rounded-xl shadow-lg z-20 max-h-60 overflow-y-auto">
-              {disponibles.map((cat) => (
+        {/* Grid de chips */}
+        <div className="flex-1 px-4 pt-4 pb-32">
+          <div className="grid grid-cols-2 gap-2.5">
+            {CATEGORIAS.map((cat) => {
+              const isActive = selected.has(cat.key)
+              return (
                 <button
                   key={cat.key}
-                  onClick={() => agregar(cat.key)}
-                  disabled={saving}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-verde-50 transition-colors border-b border-gray-50 last:border-b-0 disabled:opacity-50"
+                  onClick={() => toggle(cat.key)}
+                  className={`flex items-center gap-2.5 rounded-xl border-2 px-3 py-3 text-left transition-all ${
+                    isActive
+                      ? 'bg-[#E1F5EE] border-[#9FE1CB]'
+                      : 'bg-white border-gray-200 hover:border-gray-300'
+                  }`}
                 >
-                  <span className="text-xl">{cat.icon}</span>
-                  <span className="text-[13px] text-gray-700">{cat.label}</span>
+                  <span className="text-xl flex-shrink-0">{cat.icon}</span>
+                  <span className={`text-[12px] font-medium leading-tight ${
+                    isActive ? 'text-[#085041]' : 'text-gray-500'
+                  }`}>
+                    {cat.label}
+                  </span>
+                  {isActive && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="ml-auto flex-shrink-0">
+                      <circle cx="12" cy="12" r="10" fill="#1D9E75"/>
+                      <path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
                 </button>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+              )
+            })}
+          </div>
 
-      {/* Tip */}
-      <div className="bg-gray-50 rounded-xl p-3 text-[11px] text-gray-400">
-        <strong>Tip:</strong> Agrega las especialidades en las que tienes experiencia. La especialidad principal aparece destacada en tu perfil y determina tu categoría en las búsquedas.
+          {selected.size > 0 && (
+            <p className="text-[11px] text-gray-400 text-center mt-4">
+              {selected.size} especialidad{selected.size !== 1 ? 'es' : ''} seleccionada{selected.size !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+
+        {/* Botón guardar fijo abajo */}
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-[#e8e8e6] px-4 py-3 z-40">
+          <button
+            onClick={guardar}
+            disabled={saving}
+            className="w-full bg-[#085041] hover:bg-[#063a2e] disabled:bg-gray-300 text-white py-3 rounded-xl text-[14px] font-medium transition-colors"
+          >
+            {saving ? 'Guardando...' : 'Guardar especialidades'}
+          </button>
+        </div>
+
+        {/* Toast */}
+        {toast && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-[#085041] text-white text-[13px] font-medium px-5 py-3 rounded-xl shadow-lg animate-fade-in">
+            {toast}
+          </div>
+        )}
       </div>
     </div>
   )
