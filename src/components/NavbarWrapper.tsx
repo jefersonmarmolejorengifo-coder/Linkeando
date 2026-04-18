@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation'
 
 const EXACTAS_SIN_NAVBAR = ['/']
-const PREFIJOS_SIN_NAVBAR = ['/inicio']
+const PREFIJOS_SIN_NAVBAR = ['/inicio', '/panel', '/explorar', '/mapa', '/mis-solicitudes']
 
 export default function NavbarWrapper({ children }: { children: React.ReactNode }) {
   const path = usePathname()

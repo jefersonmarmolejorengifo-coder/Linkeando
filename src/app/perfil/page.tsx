@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import AvatarUpload from '@/components/AvatarUpload'
 import FormPerfil from '@/components/FormPerfil'
+import BotonVolver from '@/components/BotonVolver'
 
 const TIPO_LABEL = { cliente: 'Cliente', profesional: 'Profesional' }
 
@@ -23,6 +24,7 @@ export default async function PerfilPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
+      <BotonVolver />
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Mi perfil</h1>
         <Link

@@ -389,7 +389,7 @@ function ViewProfesional({
         <div>
           <div className="flex justify-between items-center mb-2.5">
             <h3 className="text-sm font-medium">{solicitudes.length > 0 ? 'Solicitud reciente' : 'Solicitudes disponibles'}</h3>
-            <button onClick={() => router.push('/solicitudes')} className="text-xs text-pro-500">Ver todas →</button>
+            <button onClick={() => router.push('/panel/solicitudes')} className="text-xs text-pro-500">Ver todas →</button>
           </div>
           {loadingPro ? (
             <div className="bg-white rounded-xl border border-borde p-3 animate-pulse h-24"/>
@@ -411,7 +411,7 @@ function ViewProfesional({
                 {solicitudes[0].presupuesto_max ? ` · 💰 Hasta $${(solicitudes[0].presupuesto_max/1000).toFixed(0)}k` : ''}
               </div>
               <button
-                onClick={() => router.push('/solicitudes')}
+                onClick={() => router.push(`/solicitudes/${solicitudes[0].id}`)}
                 className="w-full bg-pro-500 hover:bg-pro-700 text-white py-2 rounded-lg text-[12px] font-medium transition-colors"
               >
                 Ver y postular

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { CATEGORIAS, BARRIOS_CALI, CATEGORIA_COLORS } from '@/lib/constants'
@@ -23,6 +23,14 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default function ExplorarPage() {
+  return (
+    <Suspense fallback={<div className="p-6"><div className="h-64 bg-white rounded-xl animate-pulse" /></div>}>
+      <ExplorarContent />
+    </Suspense>
+  )
+}
+
+function ExplorarContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [pros, setPros] = useState<Usuario[]>([])
@@ -162,11 +170,18 @@ export default function ExplorarPage() {
         {/* Bottom nav */}
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-borde flex justify-around py-2 z-40">
           {[
-            { label: 'Inicio', href: '/inicio', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M3 12L12 3l9 9M4 10v10h16V10"/></svg> },
-            { label: 'Explorar', href: '/explorar', active: true, icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> },
-            { label: 'Mapa', href: '/mapa', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
-            { label: 'Mensajes', href: '/solicitudes', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-            { label: 'Servicios', href: '/mis-solicitudes', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> },
+            { label: 'Inicio',    href: '/inicio',
+              icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M3 12L12 3l9 9M4 10v10h16V10"/></svg> },
+            { label: 'Explorar',  href: '/explorar', active: true,
+              icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> },
+            { label: 'Mapa',      href: '/mapa',
+              icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
+            { label: 'Mensajes',  href: '/solicitudes',
+              icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+            { label: 'Alertas',   href: '/notificaciones',
+              icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg> },
+            { label: 'Servicios', href: '/mis-solicitudes',
+              icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> },
           ].map((item) => (
             <button key={item.label} onClick={() => router.push(item.href)} className={`flex flex-col items-center gap-0.5 text-[9px] px-2 border-none bg-transparent ${item.active ? 'text-verde-500' : 'text-gray-400 hover:text-gray-600'}`}>
               {item.icon}
