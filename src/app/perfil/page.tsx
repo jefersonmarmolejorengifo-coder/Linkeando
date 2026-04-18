@@ -58,7 +58,7 @@ export default async function PerfilPage() {
 
         {/* Formulario */}
         <div className="px-6 py-6">
-          <FormPerfil usuario={usuario} />
+          <FormPerfil usuario={usuario} email={user.email ?? ''} />
         </div>
       </div>
     </div>

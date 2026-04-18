@@ -38,6 +38,8 @@ export interface Usuario {
   categoria?: Categoria
   descripcion?: string
   barrio?: string
+  departamento?: string
+  ciudad?: string
   tarifa?: number
   lat?: number
   lng?: number
