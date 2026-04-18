@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import BotonVolver from '@/components/BotonVolver'
 
 const CATEGORIA_LABELS: Record<string, string> = {
   plomeria: 'Plomería', electricidad: 'Electricidad', carpinteria: 'Carpintería',
@@ -56,6 +57,7 @@ export default async function SolicitudesPage({
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
+      <BotonVolver />
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">
           {esCliente ? 'Mis solicitudes' : 'Solicitudes abiertas'}

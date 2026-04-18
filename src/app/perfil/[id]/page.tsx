@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { CATEGORIA_LABELS, CATEGORIAS } from '@/lib/constants'
+import BotonVolver from '@/components/BotonVolver'
 
 const CATEGORIA_ICONS: Record<string, string> = Object.fromEntries(
   CATEGORIAS.map((c) => [c.key, c.icon]),
@@ -141,10 +142,7 @@ export default async function PerfilPublicoPage({
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <a href="/explorar" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-verde-500 mb-4 transition-colors">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
-        Volver
-      </a>
+      <BotonVolver />
       {/* Tarjeta principal */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
         {/* Banner superior */}

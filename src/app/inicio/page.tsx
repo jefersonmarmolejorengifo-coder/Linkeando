@@ -175,7 +175,7 @@ function ViewCliente({
         <div>
           <div className="flex justify-between items-center mb-2.5">
             <h3 className="text-sm font-medium">Categorías</h3>
-            <button onClick={() => setCatActiva(null)} className="text-xs text-verde-500">Ver todas</button>
+            <button onClick={() => router.push('/explorar')} className="text-xs text-verde-500">Ver todas</button>
           </div>
           <div className="flex gap-2.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }}>
             {CATEGORIAS.map((cat) => (
@@ -432,7 +432,7 @@ function ViewProfesional({
               <span className="text-[12px] text-gray-400">Sin especialidad configurada</span>
             )}
           </div>
-          <button onClick={() => router.push('/perfil')} className="mt-3 w-full py-2 text-[12px] text-pro-500 border border-pro-500 rounded-lg hover:bg-verde-50 transition-colors">
+          <button onClick={() => router.push('/panel/especialidades')} className="mt-3 w-full py-2 text-[12px] text-pro-500 border border-pro-500 rounded-lg hover:bg-verde-50 transition-colors">
             Editar especialidades
           </button>
         </div>
