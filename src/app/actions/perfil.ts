@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
-import { perfilSchema, formatZodError } from '@/lib/validation'
+import { perfilSchema, cedulaSchema, formatZodError } from '@/lib/validation'
 
 type PerfilState = { error?: string; success?: boolean } | null
 
@@ -47,6 +47,49 @@ export async function actualizarPerfil(
 
   revalidatePath('/perfil')
   revalidatePath(`/perfil/${user.id}`)
+  return { success: true }
+}
+
+const CAMPO_TEXTO_MAX: Record<string, number> = {
+  nombre: 80, telefono: 20, barrio: 60, departamento: 60, ciudad: 60, descripcion: 500, direccion: 160,
+}
+
+export async function actualizarCampoPerfil(
+  campo: string,
+  valor: string,
+): Promise<PerfilState> {
+  const supabase = createClient(cookies())
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado.' }
+  const max = CAMPO_TEXTO_MAX[campo]
+  if (!max) return { error: 'Campo no permitido.' }
+  const trimmed = valor.trim()
+  if (trimmed.length > max) return { error: `Demasiado largo (máx ${max}).` }
+  const { error } = await supabase
+    .from('usuarios')
+    .update({ [campo]: trimmed.length === 0 ? null : trimmed })
+    .eq('id', user.id)
+  if (error) return { error: error.message }
+  revalidatePath('/perfil')
+  revalidatePath('/configuracion')
+  return { success: true }
+}
+
+export async function actualizarCedula(valor: string): Promise<PerfilState> {
+  const supabase = createClient(cookies())
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado.' }
+  const trimmed = valor.trim()
+  if (trimmed.length === 0) {
+    const { error } = await supabase.from('usuarios').update({ cedula: null }).eq('id', user.id)
+    if (error) return { error: error.message }
+    return { success: true }
+  }
+  const parsed = cedulaSchema.safeParse(trimmed)
+  if (!parsed.success) return { error: 'Cédula inválida.' }
+  const { error } = await supabase.from('usuarios').update({ cedula: parsed.data }).eq('id', user.id)
+  if (error) return { error: error.message }
+  revalidatePath('/configuracion')
   return { success: true }
 }
 

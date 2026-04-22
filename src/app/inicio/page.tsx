@@ -110,8 +110,16 @@ function BottomNavPro({ router, chatDot }: { router: ReturnType<typeof useRouter
 }
 
 /* ── Vista Cliente ───────────────────────────────────────────── */
+function saludo(): string {
+  const h = new Date().getHours()
+  if (h < 12) return 'Buenos días'
+  if (h < 19) return 'Buenas tardes'
+  return 'Buenas noches'
+}
+
 function ViewCliente({
   router, ubicacion, onUbiClick, pros, loading, search, setSearch, catActiva, setCatActiva, msgDot,
+  usuarioNombre, alertDot,
 }: {
   router: ReturnType<typeof useRouter>
   ubicacion: string
@@ -123,6 +131,8 @@ function ViewCliente({
   catActiva: string | null
   setCatActiva: (v: string | null) => void
   msgDot: boolean
+  usuarioNombre: string | null
+  alertDot: boolean
 }) {
   const filtrados = pros.filter((p) => {
     const matchCat = catActiva ? p.categoria === catActiva : true
@@ -132,16 +142,54 @@ function ViewCliente({
       : matchCat
   })
 
+  const firstName = (usuarioNombre ?? '').trim().split(' ')[0] || 'allí'
+
   return (
     <>
-      {/* Hero */}
-      <div className="bg-verde-500 px-7 pt-8 pb-9 text-center flex-shrink-0">
-        <LogoSVG />
-        <div className="text-[32px] font-medium text-white tracking-tight leading-none mt-3">Vinclu</div>
-        <div className="text-[13px] text-verde-200 mt-1">El profesional correcto para tu necesidad</div>
+      {/* Hero gradient header */}
+      <div
+        className="px-5 pt-6 pb-10 text-white flex-shrink-0 rounded-b-3xl"
+        style={{ background: 'linear-gradient(160deg, #1D9E75 0%, #16845f 100%)' }}
+      >
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2.5">
+            <LogoSVG />
+            <div>
+              <div className="text-[20px] font-semibold leading-tight">Vinclu</div>
+              <div className="text-[11px] text-verde-100/90 leading-tight">El profesional correcto para tu necesidad</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push('/notificaciones')}
+              className="relative w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
+              aria-label="Notificaciones"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
+              </svg>
+              {alertDot && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-urgente-500 ring-2 ring-verde-600"/>}
+            </button>
+            <button
+              onClick={() => router.push('/configuracion')}
+              className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
+              aria-label="Mi cuenta"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <p className="text-[22px] font-semibold leading-tight">
+          {saludo()},<br />
+          <span className="text-white/90">{firstName} 👋</span>
+        </p>
+
         <button
           onClick={onUbiClick}
-          className="inline-flex items-center gap-1.5 bg-white/14 border border-white/20 rounded-full px-3 py-1.5 text-[11px] text-verde-50 mt-3 hover:bg-white/20 transition-colors"
+          className="inline-flex items-center gap-1.5 bg-white/15 border border-white/20 rounded-full px-3 py-1.5 text-[11px] text-white/95 mt-3 hover:bg-white/25 transition-colors"
         >
           <svg width="8" height="8" viewBox="0 0 10 10" fill="#9FE1CB"><circle cx="5" cy="5" r="4"/></svg>
           {ubicacion}
@@ -173,23 +221,27 @@ function ViewCliente({
 
         {/* Categorías */}
         <div>
-          <div className="flex justify-between items-center mb-2.5">
-            <h3 className="text-sm font-medium">Categorías</h3>
-            <button onClick={() => router.push('/explorar')} className="text-xs text-verde-500">Ver todas</button>
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-semibold text-gray-900">¿Qué necesitas hoy?</h3>
+            <button onClick={() => router.push('/explorar')} className="text-xs text-verde-500 font-medium">Ver todas</button>
           </div>
-          <div className="flex gap-2.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }}>
-            {CATEGORIAS.map((cat) => (
+          <div className="grid grid-cols-4 gap-3">
+            {CATEGORIAS.slice(0, 8).map((cat) => (
               <button
                 key={cat.key}
                 onClick={() => setCatActiva(catActiva === cat.key ? null : cat.key)}
-                className="flex flex-col items-center gap-1.5 flex-shrink-0"
+                className="flex flex-col items-center gap-1.5"
               >
                 <div
-                  className={`w-[50px] h-[50px] rounded-full flex items-center justify-center text-[21px] border transition-all ${catActiva === cat.key ? 'border-verde-500 bg-verde-50' : 'border-borde bg-white hover:border-verde-500'}`}
+                  className={`w-full aspect-square rounded-2xl flex items-center justify-center text-[24px] border transition-all ${
+                    catActiva === cat.key
+                      ? 'border-verde-500 bg-verde-50 shadow-sm'
+                      : 'border-borde bg-white hover:border-verde-300'
+                  }`}
                 >
                   {cat.icon}
                 </div>
-                <span className="text-[10px] text-gray-500 text-center max-w-[54px] leading-tight">{cat.label}</span>
+                <span className="text-[10px] text-gray-600 text-center leading-tight">{cat.label}</span>
               </button>
             ))}
           </div>
@@ -468,6 +520,7 @@ export default function InicioPage() {
   const [catActiva, setCatActiva] = useState<string | null>(null)
   const [disponible, setDisponible] = useState(true)
   const [msgDot, setMsgDot] = useState(false)
+  const [alertDot, setAlertDot] = useState(false)
 
   /* Detectar ubicación */
   function detectarUbi() {
@@ -521,6 +574,11 @@ export default function InicioPage() {
         .eq('destinatario_id', data.user.id).eq('leido', false)
         .then(({ count }) => setMsgDot((count ?? 0) > 0))
 
+      // Alertas no leídas
+      supabase.from('alertas').select('id', { count: 'exact', head: true })
+        .eq('usuario_id', data.user.id).eq('leida', false)
+        .then(({ count }) => setAlertDot((count ?? 0) > 0))
+
       // Solicitudes abiertas (para profesional)
       supabase.from('solicitudes').select('*').eq('estado', 'abierta').order('created_at', { ascending: false }).limit(5)
         .then(({ data: sols }) => { setSolicitudes((sols as Solicitud[]) ?? []); setLoadingPro(false) })
@@ -568,6 +626,8 @@ export default function InicioPage() {
             catActiva={catActiva}
             setCatActiva={setCatActiva}
             msgDot={msgDot}
+            usuarioNombre={usuario?.nombre ?? null}
+            alertDot={alertDot}
           />
         ) : (
           <ViewProfesional

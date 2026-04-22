@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -74,8 +74,9 @@ interface Prof {
 }
 
 // ── Componente principal ──────────────────────────────────────
-export default function MapCali({ profesionales }: { profesionales: Prof[] }) {
+export default function MapCali({ profesionales, radioKm = 5 }: { profesionales: Prof[]; radioKm?: number }) {
   const [filtro, setFiltro]     = useState<string | null>(null)
+  const [query, setQuery]       = useState('')
   const [userPos, setUserPos]   = useState<[number, number] | null>(null)
   const [geoState, setGeoState] = useState<'loading' | 'ok' | 'error'>('loading')
 
@@ -98,14 +99,38 @@ export default function MapCali({ profesionales }: { profesionales: Prof[] }) {
     [profesionales],
   )
 
-  // Profesionales visibles según filtro activo
-  const visibles = useMemo(
-    () => filtro ? profesionales.filter((p) => p.categoria === filtro) : profesionales,
-    [profesionales, filtro],
-  )
+  // Profesionales visibles según filtro + búsqueda
+  const visibles = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return profesionales.filter((p) => {
+      if (filtro && p.categoria !== filtro) return false
+      if (!q) return true
+      return (
+        p.nombre.toLowerCase().includes(q) ||
+        (p.barrio ?? '').toLowerCase().includes(q) ||
+        (CAT[p.categoria ?? 'otros']?.label.toLowerCase().includes(q) ?? false)
+      )
+    })
+  }, [profesionales, filtro, query])
 
   return (
     <div className="flex flex-col h-full">
+
+      {/* ── Buscador ── */}
+      <div className="bg-white border-b border-gray-100 px-4 pt-3 pb-2 flex-shrink-0 relative z-10">
+        <div className="relative">
+          <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Buscar por nombre, barrio o categoría…"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-fondo border border-borde rounded-full focus:outline-none focus:ring-2 focus:ring-verde-400 focus:bg-white transition"
+          />
+        </div>
+      </div>
 
       {/* ── Barra de filtros ── */}
       <div className="bg-white border-b border-gray-100 px-4 py-3 flex flex-wrap items-center gap-2 flex-shrink-0 relative z-10">
@@ -194,12 +219,30 @@ export default function MapCali({ profesionales }: { profesionales: Prof[] }) {
           {/* Vuela a la ubicación del usuario cuando se obtiene */}
           {userPos && <FlyTo lat={userPos[0]} lng={userPos[1]} />}
 
+          {/* Círculo de radio de cobertura */}
+          {userPos && (
+            <Circle
+              center={userPos}
+              radius={radioKm * 1000}
+              pathOptions={{
+                color: '#1D9E75',
+                weight: 1.5,
+                fillColor: '#1D9E75',
+                fillOpacity: 0.08,
+                dashArray: '6 6',
+              }}
+            />
+          )}
+
           {/* Marcador del usuario (punto azul) */}
           {userPos && (
             <Marker position={userPos} icon={getIconoYo()}>
               <Popup>
                 <p style={{ fontWeight: 700, fontSize: 13, color: '#2563EB', margin: 0 }}>
                   📍 Tu ubicación
+                </p>
+                <p style={{ fontSize: 11, color: '#6B7280', margin: '4px 0 0' }}>
+                  Radio visible: {radioKm} km
                 </p>
               </Popup>
             </Marker>

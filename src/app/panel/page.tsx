@@ -70,13 +70,27 @@ export default function PanelDashboard() {
 
   return (
     <>
-      {/* Header oscuro */}
-      <div className="bg-pro-500">
-        <div className="px-4 pt-3 pb-2 flex items-center justify-between">
-          <h2 className="text-[15px] font-medium text-white">Panel profesional</h2>
-          {perfil?.es_premium && (
-            <span className="text-[11px] text-white/80 bg-premium-500 px-2.5 py-1 rounded-lg font-medium">★ Premium</span>
-          )}
+      {/* Header oscuro con gradiente */}
+      <div
+        className="rounded-b-3xl"
+        style={{ background: 'linear-gradient(160deg, #085041 0%, #063829 100%)' }}
+      >
+        <div className="px-4 pt-4 pb-2 flex items-center justify-between">
+          <h2 className="text-[15px] font-semibold text-white">Panel profesional</h2>
+          <div className="flex items-center gap-2">
+            {perfil?.es_premium && (
+              <span className="text-[11px] text-white/90 bg-premium-500 px-2.5 py-1 rounded-lg font-medium">★ Premium</span>
+            )}
+            <button
+              onClick={() => router.push('/panel/alertas')}
+              className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
+              aria-label="Alertas"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="px-4 pb-3">

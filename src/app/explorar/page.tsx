@@ -66,13 +66,16 @@ function ExplorarContent() {
     <div className="min-h-screen bg-fondo flex justify-center">
       <div className="w-full max-w-sm flex flex-col min-h-screen">
         {/* Header */}
-        <div className="bg-verde-500 px-4 pt-4 pb-5">
-          <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-[12px] text-verde-200 hover:text-white mb-2 bg-transparent border-none cursor-pointer">
+        <div
+          className="px-4 pt-4 pb-5 rounded-b-3xl"
+          style={{ background: 'linear-gradient(160deg, #1D9E75 0%, #16845f 100%)' }}
+        >
+          <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-[12px] text-white/80 hover:text-white mb-2 bg-transparent border-none cursor-pointer">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
             Volver
           </button>
-          <h1 className="text-[17px] font-medium text-white mb-3">Explorar profesionales</h1>
-          <div className="bg-white/15 rounded-xl px-3 py-2.5 flex items-center gap-2">
+          <h1 className="text-[18px] font-semibold text-white mb-3">Explorar profesionales</h1>
+          <div className="bg-white/15 backdrop-blur-sm rounded-xl px-3 py-2.5 flex items-center gap-2 border border-white/20">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input
               type="text"

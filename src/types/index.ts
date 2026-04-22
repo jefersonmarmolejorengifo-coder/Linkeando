@@ -45,6 +45,8 @@ export interface Usuario {
   lng?: number
   rating_promedio: number
   total_servicios: number
+  onboarded?: boolean
+  cedula?: string | null
   created_at: string
 }
 
@@ -59,6 +61,9 @@ export interface Profesional {
   es_premium: boolean
   premium_hasta?: string
   total_incidencias: number
+  negocio_fijo?: boolean
+  negocio_direccion?: string | null
+  negocio_descripcion?: string | null
   created_at: string
 }
 
@@ -123,7 +128,9 @@ export interface Mensaje {
   contenido: string
   leido: boolean
   created_at: string
-  // Joins opcionales
+  tipo?: 'texto' | 'voz' | 'imagen'
+  voz_url?: string | null
+  voz_duracion?: number | null
   remitente?: Usuario
 }
 

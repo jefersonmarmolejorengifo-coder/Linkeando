@@ -32,6 +32,42 @@ export async function actualizarPerfilPro(
   return { success: true }
 }
 
+export async function actualizarRadioKm(radioKm: number): Promise<{ error?: string }> {
+  const supabase = createClient(cookies())
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado.' }
+  const rk = Math.max(1, Math.min(30, Math.round(radioKm)))
+  const { error } = await supabase
+    .from('profesionales')
+    .upsert({ usuario_id: user.id, radio_km: rk }, { onConflict: 'usuario_id' })
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function actualizarNegocio(input: {
+  negocio_fijo: boolean
+  negocio_direccion?: string | null
+  negocio_descripcion?: string | null
+}): Promise<{ error?: string }> {
+  const supabase = createClient(cookies())
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado.' }
+  const dir = (input.negocio_direccion ?? '').trim()
+  const desc = (input.negocio_descripcion ?? '').trim()
+  if (dir.length > 160) return { error: 'Dirección demasiado larga.' }
+  if (desc.length > 500) return { error: 'Descripción demasiado larga.' }
+  const { error } = await supabase
+    .from('profesionales')
+    .upsert({
+      usuario_id: user.id,
+      negocio_fijo: input.negocio_fijo,
+      negocio_direccion: dir.length ? dir : null,
+      negocio_descripcion: desc.length ? desc : null,
+    }, { onConflict: 'usuario_id' })
+  if (error) return { error: error.message }
+  return {}
+}
+
 export async function toggleDisponible(
   disponible: boolean,
 ): Promise<{ error?: string }> {

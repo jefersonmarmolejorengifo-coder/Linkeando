@@ -69,7 +69,7 @@ export default async function ChatPage({
   // Historial de mensajes
   const { data: mensajesIniciales } = await supabase
     .from('mensajes')
-    .select('id, remitente_id, contenido, created_at')
+    .select('id, remitente_id, contenido, created_at, tipo, voz_url, voz_duracion')
     .eq('solicitud_id', params.solicitudId)
     .order('created_at', { ascending: true })
     .limit(200)
