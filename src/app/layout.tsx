@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={jakarta.variable}>
-      <body className={`${jakarta.className} bg-gray-50 min-h-screen`}>
+      <body className={`${jakarta.className} bg-fondo min-h-screen text-[#1a1a1a]`}>
         <NavbarWrapper><Navbar /></NavbarWrapper>
         <main>{children}</main>
       </body>
