@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
+import { perfilSchema, formatZodError } from '@/lib/validation'
 
 type PerfilState = { error?: string; success?: boolean } | null
 
@@ -16,21 +17,25 @@ export async function actualizarPerfil(
 
   if (!user) redirect('/auth/login')
 
-  const nombre       = (formData.get('nombre') as string | null)?.trim() ?? ''
-  const telefono     = (formData.get('telefono') as string | null)?.trim() || null
-  const barrio       = (formData.get('barrio') as string | null) || null
-  const departamento = (formData.get('departamento') as string | null) || null
-  const ciudad       = (formData.get('ciudad') as string | null) || null
-  const descripcion  = (formData.get('descripcion') as string | null)?.trim() || null
-  const latRaw       = formData.get('lat') as string | null
-  const lngRaw       = formData.get('lng') as string | null
+  const parsed = perfilSchema.safeParse({
+    nombre: formData.get('nombre'),
+    telefono: formData.get('telefono'),
+    barrio: formData.get('barrio'),
+    departamento: formData.get('departamento'),
+    ciudad: formData.get('ciudad'),
+    descripcion: formData.get('descripcion'),
+    lat: formData.get('lat'),
+    lng: formData.get('lng'),
+  })
 
-  if (!nombre) return { error: 'El nombre es obligatorio.' }
+  if (!parsed.success) return { error: formatZodError(parsed.error) }
+
+  const { nombre, telefono, barrio, departamento, ciudad, descripcion, lat, lng } = parsed.data
 
   const updates: Record<string, unknown> = { nombre, telefono, barrio, departamento, ciudad, descripcion }
-  if (latRaw && lngRaw) {
-    updates.lat = parseFloat(latRaw)
-    updates.lng = parseFloat(lngRaw)
+  if (lat !== undefined && lng !== undefined) {
+    updates.lat = lat
+    updates.lng = lng
   }
 
   const { error } = await supabase

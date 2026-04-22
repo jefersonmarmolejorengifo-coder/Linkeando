@@ -55,17 +55,17 @@ const BENEFICIOS_CLIENTE = [
   { icon: '✅', title: 'Profesionales verificados',  desc: 'Cédula y antecedentes validados antes de aparecer en la plataforma.' },
   { icon: '⭐', title: 'Calificaciones reales',       desc: 'Lee lo que otros clientes opinan antes de elegir a quién contratar.' },
   { icon: '💬', title: 'Chat directo',                desc: 'Habla con el profesional, comparte fotos del problema y acuerda el precio.' },
-  { icon: '🎁', title: 'Totalmente gratis',           desc: 'Sin comisiones, sin cobros ocultos. Usar Linkeando no te cuesta nada.' },
+  { icon: '🎁', title: 'Totalmente gratis',           desc: 'Sin comisiones, sin cobros ocultos. Usar Vinclu no te cuesta nada.' },
 ]
 const BENEFICIOS_PRO = [
   { icon: '📍', title: 'Clientes cerca de ti',          desc: 'Solo ves solicitudes dentro de tu zona de cobertura. Sin desplazamientos innecesarios.' },
   { icon: '📊', title: 'Panel de ingresos',              desc: 'Visualiza tus ganancias, calificaciones y rendimiento mes a mes en tiempo real.' },
   { icon: '💳', title: 'Educación financiera',           desc: 'Aprende a gestionar tus ingresos y accede a créditos para materiales y capital de trabajo.' },
-  { icon: '🚫', title: 'Sin comisiones por servicio',    desc: 'Lo que ganas es tuyo. Linkeando no cobra porcentaje por cada trabajo que realizas.' },
+  { icon: '🚫', title: 'Sin comisiones por servicio',    desc: 'Lo que ganas es tuyo. Vinclu no cobra porcentaje por cada trabajo que realizas.' },
 ]
 const TESTIMONIOS = [
   { nombre: 'Carolina M.', barrio: 'Ciudad Jardin', rol: 'cliente', texto: 'Necesitaba un plomero urgente un domingo y en 20 minutos ya tenia a alguien en camino. Excelente servicio.' },
-  { nombre: 'Jorge A.', barrio: 'El Ingenio', rol: 'profesional', texto: 'Desde que me registre en Linkeando, consigo 3-4 trabajos nuevos por semana en mi zona. Sin pagar comision.' },
+  { nombre: 'Jorge A.', barrio: 'El Ingenio', rol: 'profesional', texto: 'Desde que me registre en Vinclu, consigo 3-4 trabajos nuevos por semana en mi zona. Sin pagar comision.' },
   { nombre: 'Maria F.', barrio: 'Granada', rol: 'cliente', texto: 'Me encanta poder ver las calificaciones antes de contratar. Da mucha confianza saber que otros ya probaron el servicio.' },
   { nombre: 'Andres R.', barrio: 'Siloe', rol: 'profesional', texto: 'El panel me ayuda a organizar mis trabajos y ver cuanto voy ganando. Es como tener un asistente.' },
 ]
@@ -99,7 +99,7 @@ export default function LandingPage() {
       >
         <div className="flex items-center gap-2">
           <LogoNav />
-          <span className="text-lg font-medium text-verde-500 tracking-tight">Linkeando</span>
+          <span className="text-lg font-medium text-verde-500 tracking-tight">Vinclu</span>
         </div>
         <div className="flex gap-2">
           <Link
@@ -127,7 +127,7 @@ export default function LandingPage() {
 
         <div className="flex justify-center"><LogoHero /></div>
         <h1 className="text-[38px] font-medium text-white tracking-tight leading-none mt-3.5">
-          Linkeando
+          Vinclu
         </h1>
         <p className="text-sm text-verde-200 mt-1.5 italic">
           El profesional correcto para tu necesidad
@@ -249,7 +249,7 @@ export default function LandingPage() {
         {/* Beneficios */}
         <div>
           <h3 className="text-sm font-medium mb-2.5">
-            {esCliente ? '¿Por qué Linkeando?' : '¿Por qué unirte a Linkeando?'}
+            {esCliente ? '¿Por qué Vinclu?' : '¿Por qué unirte a Vinclu?'}
           </h3>
           <div className="flex flex-col gap-2">
             {(esCliente ? BENEFICIOS_CLIENTE : BENEFICIOS_PRO).map((b) => (

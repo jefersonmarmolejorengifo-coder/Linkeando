@@ -446,7 +446,7 @@ export default function FormPerfil({ usuario, email }: { usuario: Usuario; email
               tieneUbicacion={!!usuario.lat}
             />
             <p className="text-xs text-gray-400 mt-1.5">
-              Tu posición aparecerá en el mapa de profesionales de Linkeando.
+              Tu posición aparecerá en el mapa de profesionales de Vinclu.
             </p>
           </div>
         </>

@@ -56,8 +56,8 @@ export default function LoginPage() {
         {/* ── Hero verde ── */}
         <div className="bg-verde-500 px-6 pt-10 pb-0 text-center">
           <div className="flex justify-center mb-3"><LogoIcon /></div>
-          <p className="text-2xl font-medium text-white tracking-tight">Linkeando</p>
-          <p className="text-xs text-verde-200 mt-1 mb-5">El oficio correcto, cerca de ti</p>
+          <p className="text-2xl font-medium text-white tracking-tight">Vinclu</p>
+          <p className="text-xs text-verde-200 mt-1 mb-5">El profesional correcto para tu necesidad</p>
 
           {/* Tabs rol */}
           <div className="flex gap-0 bg-white/15 rounded-xl p-1 mx-2 mb-0">
@@ -162,7 +162,10 @@ export default function LoginPage() {
               const supabase = createClient()
               await supabase.auth.signInWithOAuth({
                 provider: 'google',
-                options: { redirectTo: `${window.location.origin}/auth/callback` },
+                options: {
+                  redirectTo: `${window.location.origin}/auth/callback`,
+                  queryParams: { access_type: 'offline', prompt: 'consent' },
+                },
               })
             }}
             className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 text-sm text-gray-600 hover:bg-fondo transition-colors"

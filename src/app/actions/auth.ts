@@ -25,6 +25,18 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) {
+    const { data: u } = await supabase
+      .from('usuarios')
+      .select('tipo, onboarded')
+      .eq('id', user.id)
+      .maybeSingle()
+    if (u?.onboarded === false) redirect('/onboarding')
+    if (u?.tipo === 'profesional') redirect('/panel')
+  }
+
   redirect('/inicio')
 }
 
@@ -67,10 +79,11 @@ export async function registro(formData: FormData) {
     telefono: telefono || null,
     categoria: tipo === 'profesional' ? categoria : null,
     barrio: barrio || null,
+    onboarded: true,
   }, { onConflict: 'id', ignoreDuplicates: true })
 
   revalidatePath('/', 'layout')
-  redirect('/inicio')
+  redirect(tipo === 'profesional' ? '/panel' : '/inicio')
 }
 
 export async function recuperarPassword(_: unknown, formData: FormData): Promise<{ error?: string; success?: boolean }> {

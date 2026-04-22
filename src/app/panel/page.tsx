@@ -42,7 +42,9 @@ export default function PanelDashboard() {
         supabase.from('solicitudes').select('*').eq('estado', 'abierta').order('created_at', { ascending: false }).limit(5),
       ])
 
-      if (u) setUsuario(u as Usuario)
+      const usr = u as (Usuario & { onboarded?: boolean }) | null
+      if (usr?.onboarded === false) { router.push('/onboarding'); return }
+      if (usr) setUsuario(usr)
       if (p) { setPerfil(p as Profesional); setDisponible((p as Profesional).disponible) }
       if (esp) setEspecialidades(esp as ProEspecialidad[])
       if (sols) setSolicitudes(sols as Solicitud[])

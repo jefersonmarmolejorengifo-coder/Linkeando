@@ -22,9 +22,9 @@ export default function TerminosPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-800">1. Naturaleza del servicio</h2>
               <p>
-                Linkeando es una plataforma digital de intermediacion que conecta a personas que necesitan
+                Vinclu es una plataforma digital de intermediacion que conecta a personas que necesitan
                 servicios para el hogar (clientes) con profesionales independientes del oficio en la ciudad
-                de Cali, Colombia. Linkeando <strong>no es empleador</strong> de los profesionales, ni
+                de Cali, Colombia. Vinclu <strong>no es empleador</strong> de los profesionales, ni
                 garantiza la ejecucion de los servicios contratados entre las partes.
               </p>
             </section>
@@ -32,7 +32,7 @@ export default function TerminosPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-800">2. Registro y cuenta</h2>
               <p>
-                Al crear una cuenta en Linkeando, el usuario declara ser mayor de 18 anos y que la
+                Al crear una cuenta en Vinclu, el usuario declara ser mayor de 18 anos y que la
                 informacion proporcionada es veridica. Cada persona puede tener una sola cuenta activa.
                 El usuario es responsable de mantener la seguridad de sus credenciales de acceso.
               </p>
@@ -64,7 +64,7 @@ export default function TerminosPage() {
               <h2 className="text-lg font-semibold text-gray-800">5. Pagos y comisiones</h2>
               <p>
                 Los pagos entre clientes y profesionales pueden realizarse directamente o a traves de
-                Mercado Pago, integrado en la plataforma. <strong>Linkeando actualmente no cobra comision
+                Mercado Pago, integrado en la plataforma. <strong>Vinclu actualmente no cobra comision
                 por transaccion</strong>. Los profesionales Premium pagan una suscripcion mensual para
                 acceder a beneficios adicionales de visibilidad.
               </p>
@@ -75,7 +75,7 @@ export default function TerminosPage() {
               <p>
                 Si un profesional no se presenta o un cliente cancela sin aviso, la parte afectada puede
                 reportar una incidencia. Las incidencias acumuladas pueden resultar en restricciones de
-                la cuenta. Linkeando se reserva el derecho de suspender cuentas con comportamiento
+                la cuenta. Vinclu se reserva el derecho de suspender cuentas con comportamiento
                 reiterado de incumplimiento.
               </p>
             </section>
@@ -92,9 +92,9 @@ export default function TerminosPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-800">8. Propiedad intelectual</h2>
               <p>
-                El nombre Linkeando, su logotipo, diseno y codigo fuente son propiedad de sus creadores.
+                El nombre Vinclu, su logotipo, diseno y codigo fuente son propiedad de sus creadores.
                 El contenido generado por los usuarios (descripciones, fotos, calificaciones) se licencia
-                a Linkeando para su uso dentro de la plataforma.
+                a Vinclu para su uso dentro de la plataforma.
               </p>
             </section>
 
@@ -112,7 +112,7 @@ export default function TerminosPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-800">10. Modificaciones</h2>
               <p>
-                Linkeando puede modificar estos terminos en cualquier momento. Los cambios se comunicaran
+                Vinclu puede modificar estos terminos en cualquier momento. Los cambios se comunicaran
                 a los usuarios registrados y entraran en vigencia desde su publicacion en la plataforma.
               </p>
             </section>
@@ -121,8 +121,8 @@ export default function TerminosPage() {
               <h2 className="text-lg font-semibold text-gray-800">11. Contacto</h2>
               <p>
                 Para consultas sobre estos terminos, puedes escribirnos a{' '}
-                <a href="mailto:soporte@linkeando.co" className="text-verde-500 hover:underline">
-                  soporte@linkeando.co
+                <a href="mailto:soporte@vinclu.co" className="text-verde-500 hover:underline">
+                  soporte@vinclu.co
                 </a>.
               </p>
             </section>

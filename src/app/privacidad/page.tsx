@@ -22,7 +22,7 @@ export default function PrivacidadPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-800">1. Responsable del tratamiento</h2>
               <p>
-                Linkeando, con domicilio en la ciudad de Cali, Valle del Cauca, Colombia, es el
+                Vinclu, con domicilio en la ciudad de Cali, Valle del Cauca, Colombia, es el
                 responsable del tratamiento de los datos personales recopilados a traves de esta
                 plataforma, en cumplimiento de la Ley 1581 de 2012 y el Decreto 1377 de 2013.
               </p>
@@ -66,8 +66,8 @@ export default function PrivacidadPage() {
               </ul>
               <p>
                 Para ejercer estos derechos, escribe a{' '}
-                <a href="mailto:soporte@linkeando.co" className="text-verde-500 hover:underline">
-                  soporte@linkeando.co
+                <a href="mailto:soporte@vinclu.co" className="text-verde-500 hover:underline">
+                  soporte@vinclu.co
                 </a>{' '}
                 indicando tu nombre, correo registrado y el derecho que deseas ejercer.
               </p>
@@ -76,7 +76,7 @@ export default function PrivacidadPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-800">5. Compartir datos con terceros</h2>
               <p>
-                Linkeando no vende ni comparte tus datos personales con terceros para fines comerciales.
+                Vinclu no vende ni comparte tus datos personales con terceros para fines comerciales.
                 Los datos se comparten unicamente con:
               </p>
               <ul className="list-disc pl-5 space-y-1">
@@ -91,7 +91,7 @@ export default function PrivacidadPage() {
               <p>
                 Implementamos medidas tecnicas y organizativas para proteger tus datos: cifrado en
                 transito (HTTPS), autenticacion segura, y politicas de acceso restringido a la base
-                de datos. Linkeando nunca almacena datos bancarios — los pagos son procesados
+                de datos. Vinclu nunca almacena datos bancarios — los pagos son procesados
                 directamente por Mercado Pago.
               </p>
             </section>
@@ -108,7 +108,7 @@ export default function PrivacidadPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-800">8. Cookies</h2>
               <p>
-                Linkeando utiliza cookies esenciales para el funcionamiento de la sesion de usuario.
+                Vinclu utiliza cookies esenciales para el funcionamiento de la sesion de usuario.
                 No utilizamos cookies de seguimiento ni publicidad de terceros.
               </p>
             </section>
@@ -125,8 +125,8 @@ export default function PrivacidadPage() {
               <h2 className="text-lg font-semibold text-gray-800">10. Contacto</h2>
               <p>
                 Para consultas sobre el tratamiento de tus datos personales, escribenos a{' '}
-                <a href="mailto:soporte@linkeando.co" className="text-verde-500 hover:underline">
-                  soporte@linkeando.co
+                <a href="mailto:soporte@vinclu.co" className="text-verde-500 hover:underline">
+                  soporte@vinclu.co
                 </a>.
               </p>
               <p className="mt-2">

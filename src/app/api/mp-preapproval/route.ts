@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import crypto from 'crypto'
 
 function getSupabaseAdmin() {
   return createClient(
@@ -8,25 +9,76 @@ function getSupabaseAdmin() {
   )
 }
 
-export async function POST(req: NextRequest) {
+function verifySignature(req: NextRequest, rawBody: string): boolean {
+  const secret = process.env.MP_WEBHOOK_SECRET
+  if (!secret) {
+    console.warn('[mp-preapproval] MP_WEBHOOK_SECRET no configurado; rechazando.')
+    return false
+  }
+
+  const sigHeader = req.headers.get('x-signature') ?? ''
+  const requestId = req.headers.get('x-request-id') ?? ''
+
+  if (!sigHeader || !requestId) return false
+
+  const parts = Object.fromEntries(
+    sigHeader.split(',').map(p => {
+      const [k, v] = p.trim().split('=')
+      return [k ?? '', v ?? '']
+    }),
+  )
+
+  const ts = parts['ts']
+  const v1 = parts['v1']
+  if (!ts || !v1) return false
+
+  let dataId = ''
   try {
-    const body = await req.json()
+    dataId = (JSON.parse(rawBody)?.data?.id ?? '').toString()
+  } catch {
+    return false
+  }
+
+  const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`
+  const expected = crypto.createHmac('sha256', secret).update(manifest).digest('hex')
+
+  try {
+    const a = Buffer.from(expected, 'hex')
+    const b = Buffer.from(v1, 'hex')
+    if (a.length !== b.length) return false
+    return crypto.timingSafeEqual(a, b)
+  } catch {
+    return false
+  }
+}
+
+export async function POST(req: NextRequest) {
+  const rawBody = await req.text()
+
+  if (!verifySignature(req, rawBody)) {
+    return new NextResponse('unauthorized', { status: 401 })
+  }
+
+  let body: { type?: string; data?: { id?: string } }
+  try {
+    body = JSON.parse(rawBody)
+  } catch {
+    return NextResponse.json({ error: 'invalid json' }, { status: 400 })
+  }
+
+  try {
     const supabaseAdmin = getSupabaseAdmin()
     const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN!
 
-    // Mercado Pago envía notificaciones con type y data.id
     const { type, data } = body
 
     if (type !== 'preapproval' || !data?.id) {
       return NextResponse.json({ received: true })
     }
 
-    // Consultar el preapproval en Mercado Pago
     const mpRes = await fetch(
       `https://api.mercadopago.com/preapproval/${data.id}`,
-      {
-        headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` },
-      },
+      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } },
     )
 
     if (!mpRes.ok) {
@@ -45,7 +97,6 @@ export async function POST(req: NextRequest) {
       next_payment_date,
     } = preapproval
 
-    // Buscar usuario por email
     const { data: usuario } = await supabaseAdmin
       .from('usuarios')
       .select('id')
@@ -59,7 +110,6 @@ export async function POST(req: NextRequest) {
 
     const profesionalId = usuario.id
 
-    // Determinar plan según preapproval_plan_id
     const PLAN_MAP: Record<string, string> = {
       '3b6309405ef64d858a0fa21d654e0e99': 'mensual',
       '594000f26a0747289ec8e531b9806e4e': 'trimestral',
@@ -68,7 +118,6 @@ export async function POST(req: NextRequest) {
     }
     const plan = PLAN_MAP[preapproval_plan_id] ?? 'mensual'
 
-    // Calcular fecha_fin según plan
     const fechaInicio = new Date(date_created)
     const mesesMap: Record<string, number> = {
       mensual: 1,
@@ -79,7 +128,6 @@ export async function POST(req: NextRequest) {
     const fechaFin = new Date(fechaInicio)
     fechaFin.setMonth(fechaFin.getMonth() + (mesesMap[plan] ?? 1))
 
-    // Mapear estado de MP a estado interno
     const estadoMap: Record<string, string> = {
       authorized: 'activa',
       paused: 'pausada',
@@ -89,7 +137,6 @@ export async function POST(req: NextRequest) {
     const estadoInterno = estadoMap[status] ?? 'pendiente'
     const esPremiumActivo = status === 'authorized'
 
-    // Upsert suscripción
     await supabaseAdmin.from('suscripciones').upsert(
       {
         profesional_id: profesionalId,
@@ -102,7 +149,6 @@ export async function POST(req: NextRequest) {
       { onConflict: 'mp_preapproval_id' },
     )
 
-    // Actualizar estado premium del profesional
     await supabaseAdmin.from('profesionales').upsert(
       {
         usuario_id: profesionalId,
@@ -114,7 +160,6 @@ export async function POST(req: NextRequest) {
       { onConflict: 'usuario_id' },
     )
 
-    // Crear alerta para el profesional
     const alertaTitulo = esPremiumActivo
       ? 'Suscripción Premium activada'
       : `Suscripción ${estadoInterno}`
@@ -137,7 +182,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Mercado Pago también puede enviar GET para verificar que el endpoint existe
 export async function GET() {
   return NextResponse.json({ status: 'ok' })
 }

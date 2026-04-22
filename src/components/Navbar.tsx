@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { logout } from '@/app/actions/auth'
+import Logo from '@/components/Logo'
 
 export default async function Navbar() {
   const cookieStore = cookies()
@@ -23,8 +24,12 @@ export default async function Navbar() {
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href={user ? (esPro ? '/panel' : '/inicio') : '/'} className="text-xl font-bold text-verde-500">
-          Linkeando
+        <Link
+          href={user ? (esPro ? '/panel' : '/inicio') : '/'}
+          className="flex items-center gap-2 text-xl font-bold text-verde-500"
+        >
+          <Logo size={28} />
+          <span>Vinclu</span>
         </Link>
 
         <div className="flex items-center gap-5 text-sm font-medium">

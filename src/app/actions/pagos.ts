@@ -52,7 +52,7 @@ export async function crearPreferenciaPago(
       items: [
         {
           id:          servicio_id,
-          title:       titulo_item || 'Servicio Linkeando',
+          title:       titulo_item || 'Servicio Vinclu',
           quantity:    1,
           unit_price:  monto,
           currency_id: 'COP',
@@ -65,7 +65,7 @@ export async function crearPreferenciaPago(
       },
       auto_return: 'approved',
       external_reference: servicio_id,
-      statement_descriptor: 'LINKEANDO',
+      statement_descriptor: 'VINCLU',
     },
   })
 

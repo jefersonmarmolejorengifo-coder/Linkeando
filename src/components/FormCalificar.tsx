@@ -42,7 +42,7 @@ export default function FormCalificar({
         <p className="text-5xl mb-3">⭐</p>
         <p className="font-bold text-gray-900 text-xl mb-1">¡Gracias por tu opinión!</p>
         <p className="text-sm text-gray-500">
-          Tu calificación ayuda a mejorar la comunidad de Linkeando.
+          Tu calificación ayuda a mejorar la comunidad de Vinclu.
         </p>
       </div>
     )

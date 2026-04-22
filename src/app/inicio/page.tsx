@@ -137,7 +137,7 @@ function ViewCliente({
       {/* Hero */}
       <div className="bg-verde-500 px-7 pt-8 pb-9 text-center flex-shrink-0">
         <LogoSVG />
-        <div className="text-[32px] font-medium text-white tracking-tight leading-none mt-3">Linkeando</div>
+        <div className="text-[32px] font-medium text-white tracking-tight leading-none mt-3">Vinclu</div>
         <div className="text-[13px] text-verde-200 mt-1">El profesional correcto para tu necesidad</div>
         <button
           onClick={onUbiClick}
@@ -503,8 +503,13 @@ export default function InicioPage() {
       supabase.from('usuarios').select('*').eq('id', data.user.id).single()
         .then(({ data: u }) => {
           if (!u) return
-          setUsuario(u as Usuario)
-          if ((u as Usuario).tipo === 'profesional') {
+          const usr = u as Usuario & { onboarded?: boolean }
+          if (usr.onboarded === false) {
+            router.push('/onboarding')
+            return
+          }
+          setUsuario(usr)
+          if (usr.tipo === 'profesional') {
             setMode('profesional')
             router.push('/panel')
             return
@@ -532,7 +537,7 @@ export default function InicioPage() {
           style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(12px)' }}
         >
           <span className="text-[15px] font-medium tracking-tight" style={{ color: mode === 'cliente' ? '#1D9E75' : '#085041' }}>
-            Linkeando
+            Vinclu
           </span>
           <div className="flex bg-fondo rounded-full p-0.5 border border-borde">
             <button

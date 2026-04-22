@@ -47,7 +47,7 @@ export default function PanelPremium() {
       </button>
       <div className="bg-gradient-to-br from-[#EF9F27] to-premium-600 rounded-xl px-4 py-4 mb-4 text-center">
         <div className="text-3xl mb-1">★</div>
-        <h1 className="text-[18px] font-bold text-white">Linkeando Premium</h1>
+        <h1 className="text-[18px] font-bold text-white">Vinclu Premium</h1>
         <p className="text-[12px] text-white/80 mt-1">Destaca tu perfil y consigue más clientes</p>
       </div>
 

@@ -61,7 +61,7 @@ export default function RegistroPage() {
             <path d="M32 40 L24 30 Q32 33 40 30 Z" fill="#fff" opacity="0.95"/>
           </svg>
           <p className="text-xl font-medium text-white">Crear cuenta</p>
-          <p className="text-xs text-verde-200 mt-1">Únete a Linkeando en Cali</p>
+          <p className="text-xs text-verde-200 mt-1">Únete a Vinclu en Cali</p>
         </div>
 
         {/* ── Formulario ── */}
@@ -78,7 +78,7 @@ export default function RegistroPage() {
 
             {/* Selector de rol */}
             <div>
-              <p className="text-xs font-medium text-gray-500 mb-2">¿Cómo vas a usar Linkeando?</p>
+              <p className="text-xs font-medium text-gray-500 mb-2">¿Cómo vas a usar Vinclu?</p>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
                   { value: 'cliente',      icon: '🔍', label: 'Cliente',      desc: 'Busco profesionales para mi hogar' },
@@ -254,7 +254,7 @@ export default function RegistroPage() {
               <label htmlFor="terms" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
                 Acepto los{' '}
                 <a href="/terminos" target="_blank" className="text-verde-500 hover:underline">Términos de uso</a> y la{' '}
-                <a href="/privacidad" target="_blank" className="text-verde-500 hover:underline">Política de privacidad</a> de Linkeando,
+                <a href="/privacidad" target="_blank" className="text-verde-500 hover:underline">Política de privacidad</a> de Vinclu,
                 incluyendo el tratamiento de mis datos según la Ley 1581 de 2012.
               </label>
             </div>
@@ -280,7 +280,10 @@ export default function RegistroPage() {
               const supabase = createClient()
               await supabase.auth.signInWithOAuth({
                 provider: 'google',
-                options: { redirectTo: `${window.location.origin}/auth/callback` },
+                options: {
+                  redirectTo: `${window.location.origin}/auth/callback`,
+                  queryParams: { access_type: 'offline', prompt: 'consent' },
+                },
               })
             }}
             className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors"

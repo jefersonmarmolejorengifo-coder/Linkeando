@@ -19,15 +19,15 @@ const FAQ_CLIENTES: FAQ[] = [
   },
   {
     q: 'Como pago por el servicio?',
-    a: 'Una vez completado el servicio, puedes pagar a traves de Mercado Pago directamente desde la plataforma. Linkeando nunca almacena tus datos bancarios.',
+    a: 'Una vez completado el servicio, puedes pagar a traves de Mercado Pago directamente desde la plataforma. Vinclu nunca almacena tus datos bancarios.',
   },
   {
     q: 'Que hago si el profesional no se presenta?',
     a: 'Puedes reportar una incidencia desde la seccion "Mis servicios". Las incidencias quedan registradas en el historial del profesional y pueden afectar su visibilidad en la plataforma.',
   },
   {
-    q: 'Linkeando cobra comision?',
-    a: 'No. Actualmente Linkeando no cobra comision por transaccion. El precio que acuerdas con el profesional es lo que pagas.',
+    q: 'Vinclu cobra comision?',
+    a: 'No. Actualmente Vinclu no cobra comision por transaccion. El precio que acuerdas con el profesional es lo que pagas.',
   },
 ]
 
@@ -46,7 +46,7 @@ const FAQ_PROFESIONALES: FAQ[] = [
   },
   {
     q: 'Como me pagan los clientes?',
-    a: 'Los clientes pueden pagarte directamente o a traves de Mercado Pago integrado en la plataforma. El dinero llega a tu cuenta de Mercado Pago sin comisiones de Linkeando.',
+    a: 'Los clientes pueden pagarte directamente o a traves de Mercado Pago integrado en la plataforma. El dinero llega a tu cuenta de Mercado Pago sin comisiones de Vinclu.',
   },
   {
     q: 'Como mejoro mi calificacion?',
@@ -99,12 +99,12 @@ export default function AyudaPage() {
         <div className="bg-verde-500 rounded-2xl px-6 py-8 text-center mb-6">
           <div className="text-3xl mb-2">💬</div>
           <h1 className="text-xl font-medium text-white">Centro de ayuda</h1>
-          <p className="text-sm text-verde-200 mt-1">Resolvemos tus dudas sobre Linkeando</p>
+          <p className="text-sm text-verde-200 mt-1">Resolvemos tus dudas sobre Vinclu</p>
         </div>
 
         {/* Como funciona */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Como funciona Linkeando</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Como funciona Vinclu</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { n: '1', icon: '📝', title: 'Publica o busca', desc: 'Los clientes publican lo que necesitan. Los profesionales exploran solicitudes.' },
@@ -155,7 +155,7 @@ export default function AyudaPage() {
           </p>
           <div className="space-y-3">
             <a
-              href="mailto:soporte@linkeando.co"
+              href="mailto:soporte@vinclu.co"
               className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-verde-200 transition-colors"
             >
               <div className="w-10 h-10 rounded-full bg-verde-50 flex items-center justify-center text-verde-500">
@@ -165,7 +165,7 @@ export default function AyudaPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-800">Correo electronico</p>
-                <p className="text-xs text-gray-400">soporte@linkeando.co</p>
+                <p className="text-xs text-gray-400">soporte@vinclu.co</p>
               </div>
             </a>
             <a

@@ -148,7 +148,7 @@ export default async function PagoResultadoPage({
 
       {/* Leyenda */}
       <p className="text-xs text-gray-400 mt-6">
-        Linkeando no almacena datos bancarios. El pago fue procesado directamente por Mercado Pago.
+        Vinclu no almacena datos bancarios. El pago fue procesado directamente por Mercado Pago.
       </p>
     </div>
   )

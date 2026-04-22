@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 
 import { CATEGORIA_LABELS } from '@/lib/constants'
+import { solicitudSchema, postulacionSchema, formatZodError } from '@/lib/validation'
 
 export async function crearSolicitud(
   _: unknown,
@@ -14,21 +15,22 @@ export async function crearSolicitud(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Debes iniciar sesión.' }
 
-  const categoria = formData.get('categoria') as string
-  const descripcion = formData.get('descripcion') as string
-  const barrio = formData.get('barrio') as string
-  const presupuesto = formData.get('presupuesto') as string
-  const foto_url = formData.get('foto_url') as string
+  const parsed = solicitudSchema.safeParse({
+    categoria: formData.get('categoria'),
+    descripcion: formData.get('descripcion'),
+    barrio: formData.get('barrio'),
+    direccion: formData.get('direccion'),
+    presupuesto_max: formData.get('presupuesto'),
+    urgente: formData.get('urgente'),
+    cuando: formData.get('cuando') || 'hoy',
+  })
 
-  if (!categoria || !descripcion || !barrio) {
-    return { error: 'Categoría, descripción y barrio son obligatorios.' }
-  }
+  if (!parsed.success) return { error: formatZodError(parsed.error) }
 
-  const titulo = `${CATEGORIA_LABELS[categoria] ?? categoria} en ${barrio}`
-
+  const { categoria, descripcion, barrio, direccion, presupuesto_max, urgente, cuando } = parsed.data
+  const foto_url = (formData.get('foto_url') as string | null) || null
   const modalidad = (formData.get('modalidad') as string) || 'puntual'
-  const cuando = (formData.get('cuando') as string) || null
-  const urgente = formData.get('urgente') === 'true'
+  const titulo = `${CATEGORIA_LABELS[categoria] ?? categoria} en ${barrio}`
 
   const { data, error } = await supabase
     .from('solicitudes')
@@ -37,10 +39,10 @@ export async function crearSolicitud(
       categoria,
       titulo,
       descripcion,
-      direccion: barrio,
+      direccion: direccion ?? barrio,
       barrio,
-      presupuesto_max: presupuesto ? Number(presupuesto) : null,
-      foto_url: foto_url || null,
+      presupuesto_max,
+      foto_url,
       estado: 'abierta',
       modalidad,
       cuando,
@@ -110,17 +112,25 @@ export async function crearPostulacion(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Debes iniciar sesión.' }
 
-  const solicitud_id = formData.get('solicitud_id') as string
-  const mensaje = formData.get('mensaje') as string
-  const precio_propuesto = formData.get('precio_propuesto') as string
+  const parsed = postulacionSchema.safeParse({
+    solicitud_id: formData.get('solicitud_id'),
+    mensaje: formData.get('mensaje'),
+    precio_propuesto: formData.get('precio_propuesto'),
+    voz_url: formData.get('voz_url'),
+    voz_duracion: formData.get('voz_duracion'),
+  })
 
-  if (!mensaje?.trim()) return { error: 'El mensaje es obligatorio.' }
+  if (!parsed.success) return { error: formatZodError(parsed.error) }
+
+  const { solicitud_id, mensaje, precio_propuesto, voz_url, voz_duracion } = parsed.data
 
   const { error } = await supabase.from('postulaciones').insert({
     solicitud_id,
     profesional_id: user.id,
-    mensaje: mensaje.trim(),
-    precio_propuesto: precio_propuesto ? Number(precio_propuesto) : null,
+    mensaje,
+    precio_propuesto,
+    voz_url,
+    voz_duracion,
     estado: 'pendiente',
   })
 
